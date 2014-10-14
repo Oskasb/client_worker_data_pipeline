@@ -1,8 +1,8 @@
 "use strict";
 
 define([
-	'io/pipeline/worker/DataComparator',
-	'io/pipeline/worker/XhrThing'
+	'data_pipeline/worker/DataComparator',
+	'data_pipeline/worker/XhrThing'
 ],
 	function(
 		DataComparator,

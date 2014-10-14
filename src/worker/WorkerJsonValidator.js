@@ -1,7 +1,7 @@
 "use strict";
 
 define([
-	'io/pipeline/worker/lib/tv4'
+	'data_pipeline/worker/lib/tv4'
 ],
 	function(
 		tv4

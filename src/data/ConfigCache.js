@@ -1,6 +1,6 @@
 "use strict";
 
-define(['io/pipeline/GameDataPipeline'],
+define(['data_pipeline/GameDataPipeline'],
 	function(
 		GameDataPipeline
 		) {

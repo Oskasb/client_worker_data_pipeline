@@ -3,7 +3,7 @@
 define([
 	'goo/entities/SystemBus',
 	'io/canvas/CanvasGuiImages',
-	'io/pipeline/data/ConfigCache'
+	'data_pipeline/data/ConfigCache'
 
 ],
 	function(

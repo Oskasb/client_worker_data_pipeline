@@ -1,11 +1,11 @@
 "use strict";
 
-define(['io/pipeline/DataPipelineMessageHandler'],
+define(['data_pipeline/DataPipelineMessageHandler'],
 	function(DataPipelineMessageHandler) {
 
 		var onUpdateCallbacks = {};
 
-		var worker = new Worker('./js/io/pipeline/worker/WorkerMain.js');
+		var worker = new Worker('./js/submodules/data_pipeline/src/worker/WorkerMain.js');
 
 		worker.onmessage = function(msg) {
 			console.log("Worker res: ",msg)

@@ -1,7 +1,7 @@
 "use strict";
 
 define([
-	'io/pipeline/DataWorker'
+	'data_pipeline/DataWorker'
 ],
 	function(
 		DataWorker

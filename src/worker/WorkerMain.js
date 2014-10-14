@@ -1,13 +1,19 @@
-var baseUrl = '../../../../';
+var baseUrl = '../../../../../';
 
 var MainWorker;
 
 importScripts(baseUrl+'js/lib/require.js');
 
-require({
-		baseUrl: baseUrl+"js/"
-	},
-	['io/pipeline/worker/WorkerDataLoader'],
+require.config({
+	baseUrl: baseUrl+'js/',
+	paths: {
+		data_pipeline:'submodules/data_pipeline/src'
+	}
+});
+
+
+require(
+	['data_pipeline/worker/WorkerDataLoader'],
 	function(WorkerDataLoader) {
 
 		var WorkerMain = function() {

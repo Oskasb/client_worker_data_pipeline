@@ -1,7 +1,7 @@
 "use strict";
 
 define([
-	'io/pipeline/worker/WorkerJsonValidator'
+	'data_pipeline/worker/WorkerJsonValidator'
 ],
 	function(
 		WorkerJsonValidator
