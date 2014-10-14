@@ -4,7 +4,9 @@ define(['data_pipeline/GameDataPipeline'],
 	function(
 		GameDataPipeline
 		) {
-		var configs = {};
+		var configs = {
+			urls:{}
+		};
 		var categories = {};
 		var images = {};
 		var imageSubs = {};
@@ -76,7 +78,7 @@ define(['data_pipeline/GameDataPipeline'],
 			for (var index in data[key]) {
 				configs[key][index] = data[key][index];
 			}
-			configs[url] = data;
+			configs.urls[url] = data;
 			ConfigCache.fireCategoryCallbacks(key);
 		};
 
