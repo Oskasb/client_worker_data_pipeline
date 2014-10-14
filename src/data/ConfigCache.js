@@ -26,10 +26,8 @@ define(['data_pipeline/GameDataPipeline'],
 			}
 		};
 
-		ConfigCache.checkPolling = function(activate) {
-			if (options.pollData && activate) {
-				return true
-			}
+		ConfigCache.checkPolling = function() {
+			return options.pollData
 		};
 
 		ConfigCache.setMasterRestFunction = function(callback) {
