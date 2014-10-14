@@ -3,22 +3,21 @@
 define([
 	'goo/entities/SystemBus',
 	'io/canvas/CanvasGuiImages',
-	'io/pipeline/data/ConfigCache',
-	'io/pipeline/GameDataPipeline'
+	'io/pipeline/data/ConfigCache'
 
 ],
 	function(
 		SystemBus,
 		CanvasGuiImages,
-		ConfigCache,
-		GameDataPipeline
+		ConfigCache
 		) {
 
 		var loaderOptions = {pollData:true};
 
 		var GuiConfigLoader = function() {
 			this.registryUrls = {};
-			GameDataPipeline.setDataPipelineOptions(loaderOptions);
+
+			ConfigCache.setDataPipelineOptions(loaderOptions);
 			this.canvasGuiImages = new CanvasGuiImages();
 		};
 
@@ -42,7 +41,8 @@ define([
 					}
 				}
 			}.bind(this);
-			GameDataPipeline.loadConfigFromUrl(url, success, fail, true);
+			ConfigCache.cacheFromUrl(url, success, fail);
+			//	GameDataPipeline.loadConfigFromUrl(url, success, fail, true);
 		};
 
 

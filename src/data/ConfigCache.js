@@ -1,8 +1,8 @@
 "use strict";
 
-define([],
+define(['io/pipeline/GameDataPipeline'],
 	function(
-
+		GameDataPipeline
 		) {
 		var configs = {};
 		var categories = {};
@@ -10,8 +10,26 @@ define([],
 		var imageSubs = {};
 		var masterReset = function() {};
 
+		var gameDataPipeline = new GameDataPipeline();
+
 		var ConfigCache = function() {
 
+		};
+
+		var options = {
+			pollData:true
+		};
+
+		ConfigCache.setDataPipelineOptions = function(opts) {
+			for (var index in opts) {
+				options[index] = opts[index];
+			}
+		};
+
+		ConfigCache.checkPolling = function(activate) {
+			if (options.pollData && activate) {
+				return true
+			}
 		};
 
 		ConfigCache.setMasterRestFunction = function(callback) {
@@ -133,9 +151,40 @@ define([],
 		};
 
 
+		ConfigCache.cacheFromUrl = function(url, success, fail) {
+
+			var onLoaded = function(remoteUrl, data) {
+
+				for (var i = 0; i < data.length; i++) {
+					for (var key in data[i]) {
+						ConfigCache.dataCombineToKey(key, url, data[i]);
+					}
+				}
+
+				success(remoteUrl, data)
+			};
+
+			GameDataPipeline.loadConfigFromUrl(url, onLoaded, fail, ConfigCache.checkPolling());
+		};
+
+		ConfigCache.cacheSvgFromUrl = function(url, success, fail) {
+
+			var onLoaded = function(remoteUrl, svgData) {
+				success(remoteUrl, svgData)
+			};
+
+			GameDataPipeline.loadSvgFromUrl(url, onLoaded, fail, ConfigCache.checkPolling());
+		};
+
+
 		ConfigCache.getCachedConfigs = function() {
 			return configs;
 		};
+
+		ConfigCache.tickDataPipeline = function(tpf) {
+			GameDataPipeline.tickDataLoader(tpf);
+		};
+
 
 		return ConfigCache;
 	});

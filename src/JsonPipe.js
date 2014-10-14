@@ -1,12 +1,10 @@
 "use strict";
 
 define([
-	'io/pipeline/DataWorker',
-	'io/pipeline/data/GameDataValidator'
+	'io/pipeline/DataWorker'
 ],
 	function(
-		DataWorker,
-		GameDataValidator
+		DataWorker
 		) {
 
 		var pollDelay = 20;
@@ -32,16 +30,12 @@ define([
 
 		JsonPipe.loadJsonFromUrl = function(url, dataUpdated, fail, activatePolling) {
 			var onLoaded = function(config, fileUrl) {
-				if (GameDataValidator.validateConfig(fileUrl, config)) {
 					JsonPipe.storeConfig(fileUrl, config, dataUpdated);
 
 					if (activatePolling) {
 						JsonPipe.registerPollCallback(fileUrl, dataUpdated);
 					}
 
-				} else {
-					fail("Json Pipe error: "+fileUrl);
-				}
 			};
 
 			var onWorkerOk = function(resUrl, res) {

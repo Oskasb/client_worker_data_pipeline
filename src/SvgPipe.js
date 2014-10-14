@@ -1,12 +1,10 @@
 "use strict";
 
 define([
-	'io/pipeline/DataWorker',
-	'io/pipeline/data/GameDataValidator'
+	'io/pipeline/DataWorker'
 ],
 	function(
-		DataWorker,
-		GameDataValidator
+		DataWorker
 		) {
 
 		var pollDelay = 300;
