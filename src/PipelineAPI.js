@@ -10,7 +10,7 @@ define(['data_pipeline/data/ConfigCache'],
 		};
 
 		PipelineAPI.readCachedConfigKey = function(category, key) {
-			ConfigCache.getConfigKey(category, key)
+			return ConfigCache.getConfigKey(category, key)
 		};
 
 		PipelineAPI.subscribeToCategoryUpdate = function(category, onDataCallback) {
