@@ -7,7 +7,7 @@ define([
 		DataWorker
 		) {
 
-		var pollDelay = 300;
+		var pollDelay = 1;
 		var pollCountdown = pollDelay;
 		var loadedData = {};
 		var lastPolledIndex = 0;
