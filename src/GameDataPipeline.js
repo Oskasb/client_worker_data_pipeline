@@ -1,8 +1,8 @@
 "use strict";
 
 define([
-	'data_pipeline/JsonPipe',
-	'data_pipeline/SvgPipe'
+	'data_pipeline/pipes/JsonPipe',
+	'data_pipeline/pipes/SvgPipe'
 ],
 	function(
 		JsonPipe,
