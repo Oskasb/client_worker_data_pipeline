@@ -163,18 +163,13 @@ define(['data_pipeline/GameDataPipeline'],
 			GameDataPipeline.loadConfigFromUrl(url, onLoaded, fail);
 		};
 
-		ConfigCache.cacheGooBundleFromUrl = function(url, success, fail) {
+		ConfigCache.cacheGooBundleFromUrl = function(goo, bundleId, url, fileName, success, fail) {
 
 			var onLoaded = function(remoteUrl, data) {
-
-				for (var i = 0; i < data.length; i++) {
-					for (var key in data[i]) {
-						ConfigCache.dataCombineToKey(key, url, data[i]);
-					}
-				}
+				ConfigCache.dataCombineToKey('bundles', bundleId, data);
 				success(remoteUrl, data)
 			};
-			GameDataPipeline.loadGooBundleFromUrl(url, onLoaded, fail);
+			GameDataPipeline.loadGooBundleFromUrl(goo, url, fileName, onLoaded, fail);
 		};
 
 		ConfigCache.cacheSvgFromUrl = function(url, success, fail) {

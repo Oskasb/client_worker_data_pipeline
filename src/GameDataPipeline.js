@@ -19,8 +19,8 @@ define([
 			JsonPipe.loadJsonFromUrl(url, dataUpdated, fail)
 		};
 
-		GameDataPipeline.loadGooBundleFromUrl = function(url, dataUpdated, fail) {
-			GooPipe.loadBundleFromFolderUrl(url, dataUpdated, fail)
+		GameDataPipeline.loadGooBundleFromUrl = function(goo, url, fileName, dataUpdated, fail) {
+			GooPipe.loadBundleFromFolderUrl(goo, url, fileName, dataUpdated, fail)
 		};
 
 		GameDataPipeline.loadSvgFromUrl = function(url, dataUpdated, fail) {

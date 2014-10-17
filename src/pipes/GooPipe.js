@@ -1,10 +1,12 @@
 "use strict";
 
 define([
-	'data_pipeline/DataWorker'
+	'data_pipeline/DataWorker',
+	'data_pipeline/goodata/BundleLoader'
 ],
 	function(
-		DataWorker
+		DataWorker,
+		BundleLoader
 		) {
 
 		var pollDelay = 0.2;
@@ -25,19 +27,32 @@ define([
 
 		};
 
+		GooPipe.passToDynamicLoader = function(goo, url, fileName, success, fail) {
+			BundleLoader.loadBundleData(goo, url, fileName, success, fail)
+		};
+
+
+
 		GooPipe.registerPollCallback = function(url, onUpdateCallback) {
 			pollCallbacks[url] = onUpdateCallback;
 			pollIndex.push(url);
 		};
 
-		GooPipe.storeConfig = function(url, config, success) {
+		GooPipe.storeConfig = function(goo, url, fileName, config, success, fail) {
 			loadedData[url] = config;
-			success(url, config);
+
+			var requestDynamicLoader = function(url, loaderData) {
+				success(url, loaderData);
+			};
+
+
+			GooPipe.passToDynamicLoader(goo, url, fileName, requestDynamicLoader, fail)
+
 		};
 
-		GooPipe.loadBundleFromFolderUrl = function(url, dataUpdated, fail) {
+		GooPipe.loadBundleFromFolderUrl = function(goo, folderUrl, fileName, dataUpdated, fail) {
 			var onLoaded = function(config, fileUrl) {
-				GooPipe.storeConfig(fileUrl, config, dataUpdated);
+				GooPipe.storeConfig(goo, folderUrl, fileName, config, dataUpdated, fail);
 				GooPipe.registerPollCallback(fileUrl, dataUpdated);
 			};
 
@@ -49,7 +64,7 @@ define([
 				fail("Worker fail: "+ res)
 			};
 
-			DataWorker.fetchJsonData(url, onWorkerOk, onWorkerFail);
+			DataWorker.fetchJsonData(folderUrl+fileName, onWorkerOk, onWorkerFail);
 		};
 
 		GooPipe.tickGooPipe = function(tpf) {
