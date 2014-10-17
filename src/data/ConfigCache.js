@@ -120,7 +120,7 @@ define(['data_pipeline/GameDataPipeline'],
 		ConfigCache.subscribeToCategoryKey = function(category, key, callback) {
 		    var data = ConfigCache.getConfigKey(category, key);
 			if (typeof(data) != 'string') {
-			    callback(data);
+			    callback(key, data);
 			}
 			ConfigCache.registerCategoryKeySubscriber(category, key, callback);
 		};
@@ -161,6 +161,20 @@ define(['data_pipeline/GameDataPipeline'],
 			};
 
 			GameDataPipeline.loadConfigFromUrl(url, onLoaded, fail);
+		};
+
+		ConfigCache.cacheGooBundleFromUrl = function(url, success, fail) {
+
+			var onLoaded = function(remoteUrl, data) {
+
+				for (var i = 0; i < data.length; i++) {
+					for (var key in data[i]) {
+						ConfigCache.dataCombineToKey(key, url, data[i]);
+					}
+				}
+				success(remoteUrl, data)
+			};
+			GameDataPipeline.loadGooBundleFromUrl(url, onLoaded, fail);
 		};
 
 		ConfigCache.cacheSvgFromUrl = function(url, success, fail) {

@@ -21,6 +21,10 @@ define(['data_pipeline/data/ConfigCache'],
 			ConfigCache.subscribeToCategoryKey(category, key, onDataCallback)
 		};
 
+		PipelineAPI.subscribeToGooBundle = function(url, success, fail) {
+			ConfigCache.cacheGooBundleFromUrl(url, success, fail)
+		};
+
 		PipelineAPI.subscribeToConfigUrl = function(url, success, fail) {
 			ConfigCache.cacheFromUrl(url, success, fail)
 		};

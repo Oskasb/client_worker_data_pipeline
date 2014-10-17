@@ -2,11 +2,13 @@
 
 define([
 	'data_pipeline/pipes/JsonPipe',
-	'data_pipeline/pipes/SvgPipe'
+	'data_pipeline/pipes/SvgPipe',
+	'data_pipeline/pipes/GooPipe'
 ],
 	function(
 		JsonPipe,
-		SvgPipe
+		SvgPipe,
+		GooPipe
 		) {
 
 		var GameDataPipeline = function() {
@@ -15,6 +17,10 @@ define([
 
 		GameDataPipeline.loadConfigFromUrl = function(url, dataUpdated, fail) {
 			JsonPipe.loadJsonFromUrl(url, dataUpdated, fail)
+		};
+
+		GameDataPipeline.loadGooBundleFromUrl = function(url, dataUpdated, fail) {
+			GooPipe.loadBundleFromFolderUrl(url, dataUpdated, fail)
 		};
 
 		GameDataPipeline.loadSvgFromUrl = function(url, dataUpdated, fail) {
@@ -27,9 +33,10 @@ define([
 		};
 
 		GameDataPipeline.applyPipelineOptions = function(opts) {
-			console.log("Apply pipeline opts:", opts)
+			console.log("Apply pipeline opts:", opts);
 			JsonPipe.setJsonPipeOpts(opts.jsonPipe);
 			SvgPipe.setSvgPipeOpts(opts.jsonPipe);
+			GooPipe.setGooPipeOpts(opts.gooPipe);
 		};
 
 		return GameDataPipeline
