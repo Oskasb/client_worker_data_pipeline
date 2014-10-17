@@ -1,13 +1,12 @@
-define(['goo/loaders/DynamicLoader',
-	'goo/util/rsvp'],
+define([
+		'goo/loaders/DynamicLoader'
+	],
 	function(
-		DynamicLoader,
-		RSVP
+		DynamicLoader
 		) {
 		"use strict";
 
 		var goo;
-		var loaders = {};
 
 		function loadFromUrl(refFile, fileName, success, fail) {
 
@@ -18,10 +17,8 @@ define(['goo/loaders/DynamicLoader',
 				beforeAdd:function(){return false} // return false to prevent auto-add to world
 			});
 
-			loaders[refFile] = loader;
-
 			loader.load(fileName).then(function(data) {
-				success(refFile, data)
+				success(refFile, data, loader)
 			}).then(null, function(error) {
 				fail(loader, error);
 			});

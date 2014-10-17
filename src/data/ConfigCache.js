@@ -1,8 +1,12 @@
 "use strict";
 
-define(['data_pipeline/GameDataPipeline'],
+define([
+		'data_pipeline/GameDataPipeline',
+		'data_pipeline/goodata/GooEntityCache'
+	],
 	function(
-		GameDataPipeline
+		GameDataPipeline,
+		GooEntityCache
 		) {
 		var configs = {
 			urls:{}
@@ -12,7 +16,8 @@ define(['data_pipeline/GameDataPipeline'],
 		var imageSubs = {};
 		var masterReset = function() {};
 
-		var gameDataPipeline = new GameDataPipeline();
+		var gooEntityCache = new GooEntityCache();
+
 
 		var ConfigCache = function() {
 
@@ -163,13 +168,20 @@ define(['data_pipeline/GameDataPipeline'],
 			GameDataPipeline.loadConfigFromUrl(url, onLoaded, fail);
 		};
 
-		ConfigCache.cacheGooBundleFromUrl = function(goo, bundleId, url, fileName, success, fail) {
+
+
+		ConfigCache.cacheGooBundleFromUrl = function(goo, bundleConf, success, fail) {
+
+			var entitiesCached = function(entities) {
+				success(bundleConf, entities)
+			};
 
 			var onLoaded = function(remoteUrl, data) {
-				ConfigCache.dataCombineToKey('bundles', bundleId, data);
-				success(remoteUrl, data)
+				ConfigCache.dataCombineToKey('bundles', bundleConf.id, data, loader);
+				gooEntityCache.cacheLoadedEntities(goo, bundleConf, data, loader, entitiesCached, fail)
 			};
-			GameDataPipeline.loadGooBundleFromUrl(goo, url, fileName, onLoaded, fail);
+
+			GameDataPipeline.loadGooBundleFromUrl(goo, bundleConf.folder, bundleConf.file, onLoaded, fail);
 		};
 
 		ConfigCache.cacheSvgFromUrl = function(url, success, fail) {
