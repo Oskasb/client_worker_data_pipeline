@@ -49,23 +49,18 @@ define([
 			configs[category] = {};
 			categories[category] = {
 				callbacks:[],
-				oneshots:{},
 				subscription:{}
 			}
 		};
 
 		ConfigCache.fireCategoryCallbacks = function(key) {
 			for (var i = 0; i < categories[key].callbacks.length; i++) {
-				categories[key].callbacks[i](configs[key]);
+				categories[key].callbacks[i](key, configs[key]);
 			}
-			for (var index in categories[key].oneshots) {
-				if (configs[key][index]) {
-					categories[key].oneshots[index](configs[key][index]);
-				}
-			}
+
 			for (var index in categories[key].subscription) {
 				if (configs[key][index]) {
-					categories[key].subscription[index](configs[key][index]);
+					categories[key].subscription[index](index, configs[key][index]);
 				}
 			}
 			masterReset();
@@ -96,15 +91,6 @@ define([
 			if(!data) return "No value for "+key;
 			return data;
 		};
-
-		ConfigCache.registerOneshotCategoryCallback = function(category, key, callback) {
-			if (!categories[category]) {
-				ConfigCache.addCategory(category);
-			}
-			categories[category].oneshots[key] = callback;
-
-		};
-
 
 		ConfigCache.registerCategoryKeySubscriber = function(category, key, callback) {
 			if (!categories[category]) {
@@ -139,7 +125,7 @@ define([
 		ConfigCache.subscribeToImageId = function(imageId, callback) {
 			var data = ConfigCache.getImageRef(imageId);
 			if (data.loaded) {
-				callback(data);
+				callback(imageId, data);
 			}
 			ConfigCache.registerImageSub(imageId, callback);
 		};
@@ -147,7 +133,7 @@ define([
 		ConfigCache.imageDataLoaded = function(id) {
 			if (!imageSubs[id]) return;
 			for (var i = 0; i < imageSubs[id].length; i++) {
-				imageSubs[id][i].callback(ConfigCache.getImageRef(id))
+				imageSubs[id][i].callback(id, ConfigCache.getImageRef(id))
 			}
 		};
 
@@ -172,8 +158,8 @@ define([
 
 		ConfigCache.cacheGooBundleFromUrl = function(path, goo, bundleConf, success, fail) {
 
-			var entitiesCached = function(entities) {
-				success(bundleConf, entities)
+			var entitiesCached = function(srcKey, entities) {
+				success(srcKey, entities)
 			};
 
 			var onLoaded = function(remoteUrl, data, loader) {
