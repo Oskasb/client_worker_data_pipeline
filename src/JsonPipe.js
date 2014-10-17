@@ -7,12 +7,19 @@ define([
 		DataWorker
 		) {
 
-		var pollDelay = 0.03;
+		var pollDelay = 0.2;
 		var pollCountdown = pollDelay;
 		var loadedData = {};
 		var lastPolledIndex = 0;
 		var pollIndex = [];
 		var pollCallbacks = {};
+
+		var options = {
+			"polling":{
+				"enabled":true,
+				"frequency":5
+			}
+		};
 
 		var JsonPipe = function() {
 
@@ -28,14 +35,10 @@ define([
 			success(url, config);
 		};
 
-		JsonPipe.loadJsonFromUrl = function(url, dataUpdated, fail, activatePolling) {
+		JsonPipe.loadJsonFromUrl = function(url, dataUpdated, fail) {
 			var onLoaded = function(config, fileUrl) {
-					JsonPipe.storeConfig(fileUrl, config, dataUpdated);
-
-					if (activatePolling) {
-						JsonPipe.registerPollCallback(fileUrl, dataUpdated);
-					}
-
+				JsonPipe.storeConfig(fileUrl, config, dataUpdated);
+				JsonPipe.registerPollCallback(fileUrl, dataUpdated);
 			};
 
 			var onWorkerOk = function(resUrl, res) {
@@ -50,6 +53,8 @@ define([
 		};
 
 		JsonPipe.tickJsonPipe = function(tpf) {
+			if (!options.polling.enabled) return;
+			pollDelay = 1/options.polling.frequency;
 			pollCountdown -= pollIndex.length*tpf/(pollIndex.length+1);
 			if (pollCountdown < 0) {
 				lastPolledIndex += 1;
@@ -62,6 +67,10 @@ define([
 				JsonPipe.loadJsonFromUrl(pollIndex[lastPolledIndex], pollCallbacks[pollIndex[lastPolledIndex]], pollFail, false)
 				pollCountdown = pollDelay;
 			}
+		};
+
+		JsonPipe.setJsonPipeOpts = function(opts) {
+			options = opts;
 		};
 
 		return JsonPipe

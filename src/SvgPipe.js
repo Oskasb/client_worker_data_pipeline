@@ -14,6 +14,14 @@ define([
 		var pollIndex = [];
 		var pollCallbacks = {};
 
+		var options = {
+			"polling":{
+				"enabled":true,
+				"frequency":1
+			}
+		};
+
+
 		var SvgPipe = function() {
 
 		};
@@ -28,13 +36,10 @@ define([
 			success(url, svg);
 		};
 
-		SvgPipe.loadSvg = function(url, dataUpdated, fail, activatePolling) {
+		SvgPipe.loadSvg = function(url, dataUpdated, fail) {
 			var onLoaded = function(svg, fileUrl) {
 				SvgPipe.storeData(fileUrl, svg, dataUpdated);
-
-				if (activatePolling) {
-					SvgPipe.registerPollCallback(fileUrl, dataUpdated);
-				}
+				SvgPipe.registerPollCallback(fileUrl, dataUpdated);
 			};
 
 			var onWorkerOk = function(resUrl, res) {
@@ -49,6 +54,8 @@ define([
 		};
 
 		SvgPipe.tickSvgPipe = function(tpf) {
+			if (!options.polling.enabled) return;
+			pollDelay = 1/options.polling.frequency;
 			pollCountdown -= pollIndex.length*tpf/(pollIndex.length+1);
 			if (pollCountdown < 0) {
 				lastPolledIndex += 1;
@@ -61,6 +68,10 @@ define([
 				SvgPipe.loadSvg(pollIndex[lastPolledIndex], pollCallbacks[pollIndex[lastPolledIndex]], pollFail, false)
 				pollCountdown = pollDelay;
 			}
+		};
+
+		SvgPipe.setSvgPipeOpts = function(opts) {
+			options = opts;
 		};
 
 		return SvgPipe

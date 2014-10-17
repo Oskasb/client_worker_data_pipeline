@@ -18,18 +18,14 @@ define(['data_pipeline/GameDataPipeline'],
 
 		};
 
-		var options = {
-			pollData:true
+
+		ConfigCache.applyDataPipelineOptions = function(opts) {
+			GameDataPipeline.applyPipelineOptions(opts)
 		};
 
-		ConfigCache.setDataPipelineOptions = function(opts) {
-			for (var index in opts) {
-				options[index] = opts[index];
-			}
-		};
 
 		ConfigCache.checkPolling = function() {
-			return options.pollData
+			return polling.options.enabled
 		};
 
 		ConfigCache.setMasterRestFunction = function(callback) {
@@ -164,7 +160,7 @@ define(['data_pipeline/GameDataPipeline'],
 				success(remoteUrl, data)
 			};
 
-			GameDataPipeline.loadConfigFromUrl(url, onLoaded, fail, ConfigCache.checkPolling());
+			GameDataPipeline.loadConfigFromUrl(url, onLoaded, fail);
 		};
 
 		ConfigCache.cacheSvgFromUrl = function(url, success, fail) {
@@ -173,7 +169,7 @@ define(['data_pipeline/GameDataPipeline'],
 				success(remoteUrl, svgData)
 			};
 
-			GameDataPipeline.loadSvgFromUrl(url, onLoaded, fail, ConfigCache.checkPolling());
+			GameDataPipeline.loadSvgFromUrl(url, onLoaded, fail);
 		};
 
 
