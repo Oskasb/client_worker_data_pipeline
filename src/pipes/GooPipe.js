@@ -41,12 +41,12 @@ define([
 		GooPipe.storeConfig = function(goo, url, fileName, config, success, fail) {
 			loadedData[url] = config;
 
-			var requestDynamicLoader = function(url, loaderData) {
-				success(url, loaderData);
+			var fromLoader = function(url, loaderData, loader) {
+				success(url, loaderData, loader);
 			};
 
 
-			GooPipe.passToDynamicLoader(goo, url, fileName, requestDynamicLoader, fail)
+			GooPipe.passToDynamicLoader(goo, url, fileName, fromLoader, fail)
 
 		};
 

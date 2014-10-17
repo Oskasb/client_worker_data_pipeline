@@ -176,7 +176,7 @@ define([
 				success(bundleConf, entities)
 			};
 
-			var onLoaded = function(remoteUrl, data) {
+			var onLoaded = function(remoteUrl, data, loader) {
 				ConfigCache.dataCombineToKey('bundles', bundleConf.id, data, loader);
 				gooEntityCache.cacheLoadedEntities(goo, bundleConf, data, loader, entitiesCached, fail)
 			};

@@ -21,8 +21,42 @@ define(['data_pipeline/data/ConfigCache'],
 			ConfigCache.subscribeToCategoryKey(category, key, onDataCallback)
 		};
 
-		PipelineAPI.subscribeToGooBundle = function(goo, bundleConf, success, fail) {
-			ConfigCache.cacheGooBundleFromUrl(goo, bundleConf, success, fail)
+
+
+		PipelineAPI.initBundleDownload = function(goo, masterUrl, assetUpdated, fail) {
+
+
+			var bundleArray;
+
+			var success = function(srcKey, loaderData) {
+				assetUpdated(srcKey, loaderData);
+				if (bundleArray.length) {
+					processNext();
+				}
+			}.bind(this);
+
+			var processNext = function() {
+				var cacheFail = function(err) {
+					console.error("Failed to cache bundle: ", err);
+				};
+				ConfigCache.cacheGooBundleFromUrl(goo, bundleArray.shift(), success, cacheFail)
+			};
+
+
+			var registerBundleList = function(bundles) {
+				bundleArray = bundles;
+				processNext();
+			};
+
+			var bundleMasterUpdated = function(srcKey, data) {
+				console.log("Bundle Master Update: ", srcKey, data);
+				for (var i = 0; i < data.length; i++) {
+					registerBundleList(data[i].bundle_index.bundles);
+				}
+			};
+
+			ConfigCache.cacheFromUrl(masterUrl, bundleMasterUpdated, fail);
+
 		};
 
 		PipelineAPI.subscribeToConfigUrl = function(url, success, fail) {

@@ -6,9 +6,9 @@ define([
 		) {
 		"use strict";
 
-		var goo;
+		var loaders = {};
 
-		function loadFromUrl(refFile, fileName, success, fail) {
+		function loadFromUrl(goo, refFile, fileName, success, fail) {
 
 			var loader = new DynamicLoader({
 				world: goo.world,
@@ -20,13 +20,12 @@ define([
 			loader.load(fileName).then(function(data) {
 				success(refFile, data, loader)
 			}).then(null, function(error) {
-				fail(loader, error);
+				fail([refFile, fileName, error, loader]);
 			});
 		}
 
-		function loadBundleData(g00, url, fileName, success, fail) {
-			goo = g00;
-			loadFromUrl(url, fileName, success, fail)
+		function loadBundleData(goo, url, fileName, success, fail) {
+			loadFromUrl(goo, url, fileName, success, fail)
 		}
 
 		return {
