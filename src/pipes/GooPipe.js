@@ -50,9 +50,9 @@ define([
 
 		};
 
-		GooPipe.loadBundleFromFolderUrl = function(goo, folderUrl, fileName, dataUpdated, fail) {
+		GooPipe.loadBundleFromFolderUrl = function(path, goo, folderUrl, fileName, dataUpdated, fail) {
 			var onLoaded = function(config, fileUrl) {
-				GooPipe.storeConfig(goo, folderUrl, fileName, config, dataUpdated, fail);
+				GooPipe.storeConfig(goo, path+folderUrl, fileName, config, dataUpdated, fail);
 				GooPipe.registerPollCallback(fileUrl, dataUpdated);
 			};
 

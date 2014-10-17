@@ -12,7 +12,7 @@ define([
 		};
 
 		GooEntityCache.prototype.cacheLoadedEntities = function(goo, bundleConf, loaderData, loader, success, fail) {
-
+			console.log("Bundle down: ", bundleConf, loaderData, loader);
 			for (var index in loaderData) {
 
 				var entry = loaderData[index];
