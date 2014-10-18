@@ -38,22 +38,28 @@ define([
 			pollIndex.push(url);
 		};
 
-		GooPipe.storeConfig = function(goo, url, fileName, config, success, fail) {
+		GooPipe.storeConfig = function(goo, path, url, fileName, config, success, fail) {
 			loadedData[url] = config;
 
-			var fromLoader = function(url, loaderData, loader) {
-				success(url, loaderData, loader);
+			var fromLoader = function(srcUrl, loaderData, loader) {
+				success(srcUrl, loaderData, loader);
 			};
 
 
-			GooPipe.passToDynamicLoader(goo, url, fileName, fromLoader, fail)
+			GooPipe.passToDynamicLoader(goo, path+url, fileName, fromLoader, fail);
 
+
+			var dataUpdated = function() {
+				GooPipe.passToDynamicLoader(goo, path+url, fileName, fromLoader, fail)
+			};
+
+			GooPipe.registerPollCallback(url+fileName, dataUpdated);
 		};
 
 		GooPipe.loadBundleFromFolderUrl = function(path, goo, folderUrl, fileName, dataUpdated, fail) {
 			var onLoaded = function(config, fileUrl) {
-				GooPipe.storeConfig(goo, path+folderUrl, fileName, config, dataUpdated, fail);
-				GooPipe.registerPollCallback(fileUrl, dataUpdated);
+				GooPipe.storeConfig(goo, path, folderUrl, fileName, config, dataUpdated, fail);
+
 			};
 
 			var onWorkerOk = function(resUrl, res) {
@@ -67,6 +73,8 @@ define([
 			DataWorker.fetchJsonData(folderUrl+fileName, onWorkerOk, onWorkerFail);
 		};
 
+
+
 		GooPipe.tickGooPipe = function(tpf) {
 			if (!options.polling.enabled) return;
 			pollDelay = 1/options.polling.frequency;
@@ -79,7 +87,9 @@ define([
 				var pollFail = function(err) {
 					console.log("Polling failed", err);
 				};
-				GooPipe.loadJsonFromUrl(pollIndex[lastPolledIndex], pollCallbacks[pollIndex[lastPolledIndex]], pollFail, false)
+
+
+				DataWorker.fetchJsonData(pollIndex[lastPolledIndex], pollCallbacks[pollIndex[lastPolledIndex]], pollFail)
 				pollCountdown = pollDelay;
 			}
 		};

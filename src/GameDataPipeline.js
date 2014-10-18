@@ -30,6 +30,7 @@ define([
 		GameDataPipeline.tickDataLoader = function(tpf) {
 			JsonPipe.tickJsonPipe(tpf);
 			SvgPipe.tickSvgPipe(tpf);
+			GooPipe.tickGooPipe(tpf);
 		};
 
 		GameDataPipeline.applyPipelineOptions = function(opts) {

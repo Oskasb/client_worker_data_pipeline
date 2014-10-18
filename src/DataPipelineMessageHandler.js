@@ -50,21 +50,21 @@ define([
 
 		var handleDataUpdated = function(url) {
 			okCount += 1;
-			delayedSend('data_update_channel', url+' '+okCount, 200);
 			delayedSend('data_update_channel', url+' '+okCount, 500);
-			delayedSend('data_update_channel', url+' '+okCount, 2500);
+		//	delayedSend('data_update_channel', url+' '+okCount, 500);
+		//	delayedSend('data_update_channel', url+' '+okCount, 2500);
 		};
 
 		var handleValidationPass = function(list) {
-			delayedSend('data_validation_update_channel', list, 300);
-			delayedSend('data_validation_update_channel', list, 600);
-			delayedSend('data_validation_update_channel', list, 3500);
+			delayedSend('data_validation_update_channel', list, 500);
+		//	delayedSend('data_validation_update_channel', list, 600);
+		//	delayedSend('data_validation_update_channel', list, 3500);
 		};
 
 		var handleValidationError = function(msg) {
-			delayedSend('data_validation_error_channel', msg, 300);
-			delayedSend('data_validation_error_channel', msg, 600);
-			delayedSend('data_validation_error_channel', msg, 3500);
+			delayedSend('data_validation_error_channel', msg, 500);
+		//	delayedSend('data_validation_error_channel', msg, 600);
+		//	delayedSend('data_validation_error_channel', msg, 3500);
 		};
 
 		return {
