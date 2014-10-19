@@ -75,6 +75,7 @@ define([
 				configs[key][index] = data[key][index];
 			}
 			configs.urls[url] = data;
+			console.log("configs updated", configs);
 			ConfigCache.fireCategoryCallbacks(key);
 		};
 
