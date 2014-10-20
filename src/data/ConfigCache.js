@@ -74,7 +74,7 @@ define([
 			for (var index in data[key]) {
 				configs[key][index] = data[key][index];
 			}
-			configs.urls[url] = data;
+
 			console.log("configs updated", configs);
 			ConfigCache.fireCategoryCallbacks(key);
 		};
@@ -142,7 +142,7 @@ define([
 		ConfigCache.cacheFromUrl = function(url, success, fail) {
 
 			var onLoaded = function(remoteUrl, data) {
-
+				configs.urls[remoteUrl] = data;
 				for (var i = 0; i < data.length; i++) {
 					for (var key in data[i]) {
 						ConfigCache.dataCombineToKey(key, url, data[i]);
