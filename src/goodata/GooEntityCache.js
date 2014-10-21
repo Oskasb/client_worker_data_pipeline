@@ -14,7 +14,7 @@ define([
 
 		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, goo, bundleConf, success, fail) {
 			var world = goo.world;
-			/*
+
 		//	entity.addToWorld();
 			var transformSystem = world.getSystem('TransformSystem');
 			var cameraSystem = world.getSystem('CameraSystem');
@@ -22,7 +22,7 @@ define([
 			var animationSystem = world.getSystem('AnimationSystem');
 			var renderSystem = world.getSystem('RenderSystem');
 			var renderer = goo.renderer;
-
+			 /*
 			world.processEntityChanges();
 			transformSystem._process();
 			cameraSystem._process();
@@ -32,24 +32,50 @@ define([
 		 	renderer.precompileShaders(renderSystem._activeEntities, renderSystem.lights);
 
 			renderer.preloadMaterials(renderSystem._activeEntities);
+
+
 		//	entity.removeFromWorld();
 
-			animationSystem._process();
-			renderSystem._process();
+
+
 
       */
+
+		//	setTimeout(function() {
+		//
+		//	}, 2000)
+
 			var cloneIt = function(entityName, callback) {
-					callback( EntityUtils.clone(goo.world, entity, {}));
+
+
+
+				var ent = EntityUtils.clone(goo.world, entity, {})
+
+				world.processEntityChanges();
+				transformSystem._process();
+				cameraSystem._process();
+				boundingSystem._process();
+
+				loader.load(this.cachedEntities[entityName].id).then(function(res) {
+					console.log("Load from DL: ", res);
+					renderSystem._process();
+					animationSystem._process();
+					renderer.precompileShaders([entity], renderSystem.lights);
+
+					renderer.preloadMaterials([entity]);
+
+				//	callback(res)
+				});
+
+				callback( ent);
+
+
 				return // ent;
-			    // This seems like it should work but dosnt..
 				loader.load(this.cachedEntities[entityName].id).then(function(res) {
 					console.log("Load from DL: ", res);
 					callback(res)
 				});
 
-			//	callback(ent);
-
-			//	return ent;
 			}.bind(this);
 
 
