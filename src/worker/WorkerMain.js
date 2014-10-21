@@ -28,6 +28,10 @@ require(
 			this.workerDataLoader.fetchSvgData(url);
 		};
 
+		WorkerMain.prototype.setupBinaryRequest = function(url) {
+			this.workerDataLoader.fetchBinaryData(url);
+		};
+
 		MainWorker = new WorkerMain();
 
 		console.log("Worker Require Loaded OK!")
@@ -50,6 +54,10 @@ var handleMessage = function(oEvent) {
 
 	if (oEvent.data[0] == 'svg') {
 		MainWorker.setupSvgRequest(oEvent.data[1]);
+	}
+
+	if (oEvent.data[0] == 'bin') {
+		MainWorker.setupBinaryRequest(oEvent.data[1]);
 	}
 };
 

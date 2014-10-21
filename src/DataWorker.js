@@ -29,8 +29,14 @@ define(['data_pipeline/DataPipelineMessageHandler'],
 			worker.postMessage(['svg', url]);
 		};
 
+		var fetchBinaryData = function(url, onDataUpdate, fail) {
+			onUpdateCallbacks[url] = [onDataUpdate, fail];
+			worker.postMessage(['bin', url]);
+		};
+
 		return {
 			fetchJsonData:fetchJsonData,
-			fetchSvgData:fetchSvgData
+			fetchSvgData:fetchSvgData,
+			fetchBinaryData:fetchBinaryData
 		};
 	});

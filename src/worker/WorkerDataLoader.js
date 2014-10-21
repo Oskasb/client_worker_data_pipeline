@@ -59,10 +59,31 @@ define([
 			this.xhrThing.sendXHR(packet, checkSvg);
 		};
 
+		WorkerDataLoader.prototype.fetchBinary = function(url, dc) {
+			var packet = {
+				responseType:'arraybuffer',
+				type:"GET",
+				url:baseUrl+url
+			};
+
+			var checkBinary = function(str) {
+				dc.compareAndCacheBinary(url, str);
+			};
+
+			this.xhrThing.sendXHR(packet, checkBinary);
+		};
 
 		WorkerDataLoader.prototype.fetchJsonData = function(url) {
 			this.fetchJson(url, this.dataComparator)
 		};
+
+
+
+		WorkerDataLoader.prototype.fetchBinaryData = function(url) {
+
+			this.fetchBinary(url, this.dataComparator);
+		};
+
 
 		WorkerDataLoader.prototype.fetchSvgData = function(url) {
 

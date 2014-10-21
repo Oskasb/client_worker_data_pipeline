@@ -9,6 +9,7 @@ define([
 
 		var cachedJson = {};
 		var cachedSvg = {};
+		var cachedBinary = {};
 		var errorUrls = {};
 
 		var DataComparator = function() {
@@ -69,6 +70,8 @@ define([
 
 		};
 
+
+
 		DataComparator.prototype.compareAndCacheSvg = function(url, svg) {
 
 			var success = function(json) {
@@ -79,6 +82,24 @@ define([
 			if (cachedSvg[url] != svg) {
 				cachedSvg[url] = svg;
 				success(svg);
+			} else {
+				if (errorUrls[url]) {
+					errorResolved(url, errorUrls[url])
+				}
+			}
+		};
+
+
+		DataComparator.prototype.compareAndCacheBinary = function(url, binData) {
+
+			var success = function(data) {
+				responseOk(url, data)
+			};
+
+
+			if (cachedBinary[binData] != binData) {
+				cachedBinary[url] = binData;
+				success(binData);
 			} else {
 				if (errorUrls[url]) {
 					errorResolved(url, errorUrls[url])

@@ -3,11 +3,13 @@
 define([
 	'data_pipeline/pipes/JsonPipe',
 	'data_pipeline/pipes/SvgPipe',
+	'data_pipeline/pipes/ImagePipe',
 	'data_pipeline/pipes/GooPipe'
 ],
 	function(
 		JsonPipe,
 		SvgPipe,
+		ImagePipe,
 		GooPipe
 		) {
 
@@ -27,10 +29,16 @@ define([
 			SvgPipe.loadSvg(url, dataUpdated, fail)
 		};
 
+		GameDataPipeline.loadImageFromUrl = function(url, dataUpdated, fail) {
+			ImagePipe.loadImage(url, dataUpdated, fail)
+		};
+
+
 		GameDataPipeline.tickDataLoader = function(tpf) {
 			JsonPipe.tickJsonPipe(tpf);
 			SvgPipe.tickSvgPipe(tpf);
 			GooPipe.tickGooPipe(tpf);
+			ImagePipe.tickImagePipe(tpf);
 		};
 
 		GameDataPipeline.applyPipelineOptions = function(opts) {
@@ -38,6 +46,7 @@ define([
 			JsonPipe.setJsonPipeOpts(opts.jsonPipe);
 			SvgPipe.setSvgPipeOpts(opts.jsonPipe);
 			GooPipe.setGooPipeOpts(opts.gooPipe);
+			ImagePipe.setImagePipeOpts(opts.imagePipe);
 		};
 
 		return GameDataPipeline

@@ -67,6 +67,11 @@ define(['data_pipeline/data/ConfigCache'],
 			ConfigCache.cacheSvgFromUrl(url, success, fail)
 		};
 
+		PipelineAPI.cacheImageFromUrl = function(url, success, fail) {
+			ConfigCache.cacheImageFromUrl(url, success, fail)
+
+		};
+
 		PipelineAPI.getCachedConfigs = function() {
 			return ConfigCache.getCachedConfigs();
 		};

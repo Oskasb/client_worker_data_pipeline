@@ -12,11 +12,45 @@ define([
 		};
 
 
-		GooEntityCache.prototype.returnBuiltEntity = function(goo, entity, bundleConf, success, fail) {
+		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, goo, bundleConf, success, fail) {
+			var world = goo.world;
+			/*
+		//	entity.addToWorld();
+			var transformSystem = world.getSystem('TransformSystem');
+			var cameraSystem = world.getSystem('CameraSystem');
+			var boundingSystem = world.getSystem('BoundingUpdateSystem');
+			var animationSystem = world.getSystem('AnimationSystem');
+			var renderSystem = world.getSystem('RenderSystem');
+			var renderer = goo.renderer;
 
-			var cloneIt = function() {
-				return EntityUtils.clone(goo.world, entity, {});
-			};
+			world.processEntityChanges();
+			transformSystem._process();
+			cameraSystem._process();
+			boundingSystem._process();
+
+
+		 	renderer.precompileShaders(renderSystem._activeEntities, renderSystem.lights);
+
+			renderer.preloadMaterials(renderSystem._activeEntities);
+		//	entity.removeFromWorld();
+
+			animationSystem._process();
+			renderSystem._process();
+
+      */
+			var cloneIt = function(entityName, callback) {
+					callback( EntityUtils.clone(goo.world, entity, {}));
+				return // ent;
+			    // This seems like it should work but dosnt..
+				loader.load(this.cachedEntities[entityName].id).then(function(res) {
+					console.log("Load from DL: ", res);
+					callback(res)
+				});
+
+			//	callback(ent);
+
+			//	return ent;
+			}.bind(this);
 
 
 			console.log("Wanted entity cached: ", entity);
@@ -33,14 +67,6 @@ define([
 			};
 
 
-			var world = goo.world;
-
-			var transformSystem = world.getSystem('TransformSystem');
-			var cameraSystem = world.getSystem('CameraSystem');
-			var boundingSystem = world.getSystem('BoundingUpdateSystem');
-			var animationSystem = world.getSystem('AnimationSystem');
-			var renderSystem = world.getSystem('RenderSystem');
-			var renderer = goo.renderer;
 
 
 			for (var index in loaderData) {
@@ -48,24 +74,15 @@ define([
 				var entry = loaderData[index];
 				if (bundleConf.entities.indexOf(entry.name) != -1) {
 
-					var entityBuilt = function(res) {
-						this.returnBuiltEntity(goo, res, bundleConf, success, fail);
+					var entityBuilt = function(id, res, dynamicLoader) {
+						this.returnBuiltEntity(id, res, dynamicLoader, goo, bundleConf, success, fail);
 					}.bind(this);
 
 					this.cachedEntities[entry.name] = entry;
 					loader.load(entry.id, {preloadBinaries:true, progressCallback:progressUpdate})
 						.then(function(res) {
 
-						world.processEntityChanges();
-						transformSystem._process();
-						cameraSystem._process();
-						boundingSystem._process();
-						renderer.precompileShaders(renderSystem._activeEntities, renderSystem.lights);
-						renderer.preloadMaterials(renderSystem._activeEntities);
-						animationSystem._process();
-						renderSystem._process();
-
-						entityBuilt(res)
+						entityBuilt(entry.id, res, loader);
 
 					}).then(null, function (e) {
 							// If something goes wrong, 'e' is the error message from the engine.

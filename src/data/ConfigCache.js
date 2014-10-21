@@ -180,6 +180,14 @@ define([
 			GameDataPipeline.loadSvgFromUrl(url, onLoaded, fail);
 		};
 
+		ConfigCache.cacheImageFromUrl = function(url, success, fail) {
+
+			var onLoaded = function(remoteUrl, svgData) {
+				success(remoteUrl, svgData)
+			};
+
+			GameDataPipeline.loadImageFromUrl(url, onLoaded, fail);
+		};
 
 		ConfigCache.getCachedConfigs = function() {
 			return configs;
