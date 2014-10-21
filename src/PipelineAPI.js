@@ -23,7 +23,7 @@ define(['data_pipeline/data/ConfigCache'],
 
 
 
-		PipelineAPI.initBundleDownload = function(path, goo, masterUrl, assetUpdated, fail) {
+		PipelineAPI.initBundleDownload = function(path, goo, masterUrl, assetUpdated, fail, notifyLoaderProgress) {
 
 
 			var bundleArray;
@@ -39,7 +39,7 @@ define(['data_pipeline/data/ConfigCache'],
 				var cacheFail = function(err) {
 					console.error("Failed to cache bundle: ", err);
 				};
-				ConfigCache.cacheGooBundleFromUrl(path, goo, bundleArray.shift(), success, cacheFail)
+				ConfigCache.cacheGooBundleFromUrl(path, goo, bundleArray.shift(), success, cacheFail, notifyLoaderProgress)
 			};
 
 

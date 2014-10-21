@@ -157,7 +157,7 @@ define([
 
 
 
-		ConfigCache.cacheGooBundleFromUrl = function(path, goo, bundleConf, success, fail) {
+		ConfigCache.cacheGooBundleFromUrl = function(path, goo, bundleConf, success, fail, notifyLoaderProgress) {
 
 			var entitiesCached = function(srcKey, entities) {
 				success(srcKey, entities)
@@ -165,7 +165,7 @@ define([
 
 			var onLoaded = function(remoteUrl, data, loader) {
 				ConfigCache.dataCombineToKey('bundles', bundleConf.id, data, loader);
-				gooEntityCache.cacheLoadedEntities(goo, bundleConf, data, loader, entitiesCached, fail)
+				gooEntityCache.cacheLoadedEntities(goo, bundleConf, data, loader, entitiesCached, fail, notifyLoaderProgress)
 			};
 
 			GameDataPipeline.loadGooBundleFromUrl(path, goo, path+bundleConf.folder, bundleConf.file, onLoaded, fail);
