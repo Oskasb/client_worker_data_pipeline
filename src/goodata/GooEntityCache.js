@@ -11,28 +11,59 @@ define([
 		    this.cachedEntities = {};
 		};
 
+		GooEntityCache.prototype.preloadEntity = function(goo, entity, bundleConf, sourceData, success, cloneIt) {
 
-		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, goo, bundleConf, success, fail) {
+			var preloadDoneCallback = function(ent, gooConf, sourceConf) {
+				success(ent.name, {conf:gooConf, sourceData:sourceConf, build:cloneIt})
+			};
+
 			var world = goo.world;
-
-		//	entity.addToWorld();
 			var transformSystem = world.getSystem('TransformSystem');
 			var cameraSystem = world.getSystem('CameraSystem');
 			var boundingSystem = world.getSystem('BoundingUpdateSystem');
 			var animationSystem = world.getSystem('AnimationSystem');
 			var renderSystem = world.getSystem('RenderSystem');
 			var renderer = goo.renderer;
-			 /*
-			world.processEntityChanges();
-			transformSystem._process();
-			cameraSystem._process();
-			boundingSystem._process();
+
+			var precompedShader = function() {
+				return renderer.preloadMaterials([entity]).then(preloadedMats);
+			};
+
+			var preloadedMats = function() {
+			//	entity.removeFromWorld();
+				world.processEntityChanges();
+				preloadDoneCallback(entity, bundleConf, sourceData);
+			};
+
+			if (!entity.meshRendererComponent) {
+				console.log("No entity.meshRendererComponent...", entity);
+				entity.addToWorld();
+				world.processEntityChanges();
+				transformSystem._process();
+				cameraSystem._process();
+				boundingSystem._process();
+				var removeIt = function() {
+					entity.removeFromWorld();
+				};
+
+				renderer.precompileShaders([entity], renderSystem.lights).then(precompedShader).then(removeIt);
 
 
-		 	renderer.precompileShaders(renderSystem._activeEntities, renderSystem.lights);
+			//	preloadDoneCallback(entity, bundleConf, sourceData);
+			} else {
+		//		entity.meshRendererComponent.cullMode = 'Never';
+		//		entity.addToWorld();
+				world.processEntityChanges();
+				transformSystem._process();
+				cameraSystem._process();
+				boundingSystem._process();
+				renderer.precompileShaders([entity], renderSystem.lights).then(precompedShader);
+			}
+		};
 
-			renderer.preloadMaterials(renderSystem._activeEntities);
-*/
+
+		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, goo, sourceData, success, fail) {
+
 			var cloneEntityName = function(conf, cb) {
 				loader.load(conf.id).then(function(res) {
 					cb(res)
@@ -44,7 +75,10 @@ define([
 			}.bind(this);
 
 			console.log("Wanted entity cached: ", entity);
-			success(entity.name, {conf:this.cachedEntities[entity.name], sourceData:bundleConf, build:cloneIt})
+
+
+
+			this.preloadEntity(goo, entity, this.cachedEntities[entity.name], sourceData, success, cloneIt)
 
 		};
 
