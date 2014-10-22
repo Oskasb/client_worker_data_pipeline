@@ -32,52 +32,16 @@ define([
 		 	renderer.precompileShaders(renderSystem._activeEntities, renderSystem.lights);
 
 			renderer.preloadMaterials(renderSystem._activeEntities);
-
-
-		//	entity.removeFromWorld();
-
-
-
-
-      */
-
-		//	setTimeout(function() {
-		//
-		//	}, 2000)
+*/
+			var cloneEntityName = function(conf, cb) {
+				loader.load(conf.id).then(function(res) {
+					cb(res)
+				});
+			};
 
 			var cloneIt = function(entityName, callback) {
-
-
-
-				var ent = EntityUtils.clone(goo.world, entity, {})
-
-				world.processEntityChanges();
-				transformSystem._process();
-				cameraSystem._process();
-				boundingSystem._process();
-
-				loader.load(this.cachedEntities[entityName].id).then(function(res) {
-					console.log("Load from DL: ", res);
-					renderSystem._process();
-					animationSystem._process();
-					renderer.precompileShaders([entity], renderSystem.lights);
-
-					renderer.preloadMaterials([entity]);
-
-				//	callback(res)
-				});
-
-				callback( ent);
-
-
-				return // ent;
-				loader.load(this.cachedEntities[entityName].id).then(function(res) {
-					console.log("Load from DL: ", res);
-					callback(res)
-				});
-
+				cloneEntityName(this.cachedEntities[entityName], callback);
 			}.bind(this);
-
 
 			console.log("Wanted entity cached: ", entity);
 			success(entity.name, {conf:this.cachedEntities[entity.name], sourceData:bundleConf, build:cloneIt})
@@ -91,9 +55,6 @@ define([
 				notifyLoaderProgress(handled, refCount);
 				console.log("Progress: ", handled, refCount);
 			};
-
-
-
 
 			for (var index in loaderData) {
 
