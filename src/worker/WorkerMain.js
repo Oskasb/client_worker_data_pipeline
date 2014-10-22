@@ -3,6 +3,7 @@ var baseUrl = '../../../../../';
 var MainWorker;
 
 importScripts(baseUrl+'js/lib/require.js');
+importScripts(baseUrl+'js/lib/goo/goo.js');
 
 require.config({
 	baseUrl: baseUrl+'js/',
