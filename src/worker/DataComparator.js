@@ -1,10 +1,12 @@
 "use strict";
 
 define([
-	'data_pipeline/worker/WorkerJsonValidator'
+	'data_pipeline/worker/WorkerJsonValidator',
+	'data_pipeline/goodata/DataModelProcessor'
 ],
 	function(
-		WorkerJsonValidator
+		WorkerJsonValidator,
+		DataModelProcessor
 		) {
 
 		var cachedJson = {};
@@ -58,6 +60,10 @@ define([
 			var isValid = function(validJson) {
 				if (cachedJson[url] != validJson) {
 					cachedJson[url] = validJson;
+
+					// Process data model
+					validJson = DataModelProcessor.process(validJson);
+
 					success(validJson)
 				} else {
 					if (errorUrls[url]) {
