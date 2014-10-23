@@ -62,7 +62,7 @@ define([
 					lastPolledIndex = 0;
 				}
 				var pollFail = function(err) {
-					console.log("Polling failed", err);
+					console.error("Json Polling failed", err);
 				};
 				JsonPipe.loadJsonFromUrl(pollIndex[lastPolledIndex], pollCallbacks[pollIndex[lastPolledIndex]], pollFail, false)
 				pollCountdown = pollDelay;

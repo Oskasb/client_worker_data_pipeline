@@ -8,7 +8,6 @@ define(['data_pipeline/DataPipelineMessageHandler'],
 		var worker = new Worker('./js/submodules/data_pipeline/src/worker/WorkerMain.js');
 
 		worker.onmessage = function(msg) {
-			console.log("Worker res: ",msg)
 			if (msg.data[0] == 'ok') {
 				onUpdateCallbacks[msg.data[1]][0](msg.data[1], msg.data[2]);
 				DataPipelineMessageHandler.handleDataUpdated(msg.data[1]);

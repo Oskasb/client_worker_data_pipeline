@@ -12,8 +12,6 @@ define([
 		var WorkerDataLoader = function() {
 			this.dataComparator = new DataComparator();
 			this.xhrThing = new XhrThing();
-			console.log("Worker WorkerDataLoader init")
-
 		};
 
 		var errorUrls = {};

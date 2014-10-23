@@ -46,7 +46,7 @@ define([
 				onLoaded(res, resUrl);
 			};
 			var onWorkerFail = function(res) {
-				console.log("Worker fail: ", res)
+				console.error("Worker error: ", res)
 			};
 
 			DataWorker.fetchBinaryData(url, onWorkerOk, onWorkerFail);
@@ -62,7 +62,7 @@ define([
 					lastPolledIndex = 0;
 				}
 				var pollFail = function(err) {
-					console.log("Polling failed", err);
+					console.error("Image Polling failed", err);
 				};
 				ImagePipe.loadImage(pollIndex[lastPolledIndex], pollCallbacks[pollIndex[lastPolledIndex]], pollFail, false)
 				pollCountdown = pollDelay;

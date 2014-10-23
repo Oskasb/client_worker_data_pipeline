@@ -9,6 +9,10 @@ define(['data_pipeline/data/ConfigCache'],
 
 		};
 
+		PipelineAPI.addProgressCallback = function(callback) {
+			ConfigCache.addProgressCallback(callback);
+		};
+
 		PipelineAPI.readCachedConfigKey = function(category, key) {
 			return ConfigCache.getConfigKey(category, key)
 		};
@@ -49,7 +53,6 @@ define(['data_pipeline/data/ConfigCache'],
 			};
 
 			var bundleMasterUpdated = function(srcKey, data) {
-				console.log("Bundle Master Update: ", srcKey, data);
 				for (var i = 0; i < data.length; i++) {
 					registerBundleList(data[i].bundle_index.bundles);
 				}

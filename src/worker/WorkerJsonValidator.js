@@ -10,7 +10,6 @@ define([
 
 
 	    var WorkerJsonValidator = function() {
-		    console.log("validator lib: ", tv4);
 		    this.schemas = {};
 		    this.schemaUrlIndex = {};
 		    this.schemaUrls = [];
@@ -30,7 +29,6 @@ define([
 		};
 
 		WorkerJsonValidator.prototype.setupSchemaPoll = function() {
-			console.log("Setup Poll!")
 			var pollSchemas = function() {
 				this.pollNext();
 			}.bind(this);
@@ -70,16 +68,13 @@ define([
 
 		WorkerJsonValidator.prototype.processDataAgainstSchema = function(data, schema, onInvalid) {
 			var valid = tv4.validate(data, schema);
-			console.log("Validate response: ", valid);
 			return valid;
 		};
 
 		WorkerJsonValidator.prototype.checkJsonDataAgainstSchemas = function(dataName, data, onInvalid) {
 			var valid = true;
 			for (var index in this.schemas) {
-				console.log("Match dataName against schemas: ",index, dataName);
 				if (index == dataName) {
-					console.log("Schema present: ",index, this.schemas[index], data);
 					valid = this.processDataAgainstSchema(data, this.schemas[index], onInvalid);
 				}
 			}
@@ -97,11 +92,10 @@ define([
 				}
 			}
 			if (valid === true) {
-				console.log("Validate OK!")
 				ok(json)
 			} else {
 				fail([tv4.error.message, tv4.error.schemaPath]);
-				console.log("Validate returns: ", valid, tv4.error);
+				console.error("Validate error: ", tv4.error);
 			}
 
 		};
@@ -114,11 +108,11 @@ define([
 
 			try {
 				var parsed = JSON.parse(json);
-				if (!this.checkSchemaUpdate(url, parsed, json)) {
+				this.checkSchemaUpdate(url, parsed, json)
 					this.validateJson(json, parsed, ok, fail)
-				}
+
 			} catch (e) {
-				console.log("json parse error", e);
+				console.error("json parse error", e);
 				fail(e.message);
 			}
 

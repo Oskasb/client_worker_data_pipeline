@@ -16,8 +16,6 @@ define([
 
 		var DataComparator = function() {
 			this.jsonValidator = new WorkerJsonValidator();
-			console.log("Worker DataComparator init")
-
 		};
 
 		var errorResolved = function(url, resolved) {

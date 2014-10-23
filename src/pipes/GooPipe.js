@@ -85,7 +85,7 @@ define([
 					lastPolledIndex = 0;
 				}
 				var pollFail = function(err) {
-					console.log("Polling failed", err);
+					console.error("GooPolling failed", err);
 				};
 
 

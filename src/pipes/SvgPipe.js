@@ -47,7 +47,7 @@ define([
 				//	console.log("Worker success: ", res, activatePolling)
 			};
 			var onWorkerFail = function(res) {
-				console.log("Worker fail: ", res)
+				console.error("Worker error: ", res)
 			};
 
 			DataWorker.fetchSvgData(url, onWorkerOk, onWorkerFail);
@@ -63,7 +63,7 @@ define([
 					lastPolledIndex = 0;
 				}
 				var pollFail = function(err) {
-					console.log("Polling failed", err);
+					console.error("Svg Polling failed", err);
 				};
 				SvgPipe.loadSvg(pollIndex[lastPolledIndex], pollCallbacks[pollIndex[lastPolledIndex]], pollFail, false)
 				pollCountdown = pollDelay;

@@ -42,7 +42,6 @@ define([
 		};
 
 		GameDataPipeline.applyPipelineOptions = function(opts) {
-			console.log("Apply pipeline opts:", opts);
 			JsonPipe.setJsonPipeOpts(opts.jsonPipe);
 			SvgPipe.setSvgPipeOpts(opts.jsonPipe);
 			GooPipe.setGooPipeOpts(opts.gooPipe);

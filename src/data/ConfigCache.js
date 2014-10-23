@@ -15,6 +15,10 @@ define([
 		var images = {};
 		var imageSubs = {};
 		var masterReset = function() {};
+		var progressCallbacks = [];
+		var requestedUrls = [];
+		var loadedUrls = [];
+		var remainingUrls = [];
 
 		var gooEntityCache = new GooEntityCache();
 
@@ -28,12 +32,12 @@ define([
 			GameDataPipeline.applyPipelineOptions(opts)
 		};
 
-
-		ConfigCache.checkPolling = function() {
-			return polling.options.enabled
+		ConfigCache.addProgressCallback = function(callback) {
+			progressCallbacks.push(callback)
 		};
 
-		ConfigCache.setMasterRestFunction = function(callback) {
+
+		ConfigCache.setMasterResetFunction = function(callback) {
 			masterReset = callback;
 		};
 
@@ -75,7 +79,6 @@ define([
 				configs[key][index] = data[key][index];
 			}
 
-			console.log("configs updated", configs);
 			ConfigCache.fireCategoryCallbacks(key);
 		};
 
@@ -138,32 +141,60 @@ define([
 			}
 		};
 
+		ConfigCache.notifyLoadStateChange = function() {
+			for (var i = 0; i < progressCallbacks.length; i++) {
+				progressCallbacks[i](requestedUrls.length, remainingUrls.length, loadedUrls.length, remainingUrls)
+			}
+		//	console.log("CacheState, Requested:", requestedUrls.length, "Remaining:",remainingUrls.length, "Loaded:",loadedUrls.length)
+		};
+
+		ConfigCache.notifyUrlReadRequest = function(url) {
+			if (requestedUrls.indexOf(url) == -1) {
+				requestedUrls.push(url);
+				remainingUrls.push(url);
+				ConfigCache.notifyLoadStateChange();
+			}
+
+		};
+
+		ConfigCache.notifyUrlReceived = function(url) {
+			if (remainingUrls.indexOf(url) != -1) {
+				remainingUrls.splice(remainingUrls.indexOf(url), 1);
+			}
+
+			if (loadedUrls.indexOf(url) == -1) {
+				loadedUrls.push(url);
+
+			}
+			ConfigCache.notifyLoadStateChange();
+		};
+
 
 		ConfigCache.cacheFromUrl = function(url, success, fail) {
-
+			ConfigCache.notifyUrlReadRequest(url);
 			var onLoaded = function(remoteUrl, data) {
+				ConfigCache.notifyUrlReceived(remoteUrl);
 				configs.urls[remoteUrl] = data;
 				for (var i = 0; i < data.length; i++) {
 					for (var key in data[i]) {
 						ConfigCache.dataCombineToKey(key, url, data[i]);
 					}
 				}
-
 				success(remoteUrl, data)
 			};
-
 			GameDataPipeline.loadConfigFromUrl(url, onLoaded, fail);
 		};
 
 
 
 		ConfigCache.cacheGooBundleFromUrl = function(path, goo, bundleConf, success, fail, notifyLoaderProgress) {
-
+			ConfigCache.notifyUrlReadRequest(path+bundleConf.folder);
 			var entitiesCached = function(srcKey, entities) {
-				success(srcKey, entities)
+				success(srcKey, entities);
 			};
 
 			var onLoaded = function(remoteUrl, data, loader) {
+				ConfigCache.notifyUrlReceived(remoteUrl);
 				ConfigCache.dataCombineToKey('bundles', bundleConf.id, data, loader);
 				gooEntityCache.cacheLoadedEntities(goo, bundleConf, data, loader, entitiesCached, fail, notifyLoaderProgress)
 			};
@@ -172,7 +203,7 @@ define([
 		};
 
 		ConfigCache.cacheSvgFromUrl = function(url, success, fail) {
-
+			ConfigCache.notifyUrlReadRequest(url);
 			var onLoaded = function(remoteUrl, svgData) {
 				success(remoteUrl, svgData)
 			};
@@ -181,7 +212,7 @@ define([
 		};
 
 		ConfigCache.cacheImageFromUrl = function(url, success, fail) {
-
+			ConfigCache.notifyUrlReadRequest(url);
 			var onLoaded = function(remoteUrl, svgData) {
 				success(remoteUrl, svgData)
 			};

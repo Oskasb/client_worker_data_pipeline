@@ -22,9 +22,7 @@ define([
 
 
 		CanvasGuiImages.prototype.downloadSvgImageRef = function(id, ref) {
-			console.log("Request Svg download: ", id, ref);
 			var dataUpdated = function(url, svgData) {
-				console.log("Svg download Ok: ", id, url, ref);
 				this.data[id].svg = svgData;
 				this.data[id].image = new Image();
 
@@ -37,7 +35,7 @@ define([
 			}.bind(this);
 
 			var fail = function(err) {
-				console.log("Image download fail", err)
+				console.error("Image download error", err)
 			};
 
 			GameDataPipeline.loadSvgFromUrl(ref, dataUpdated, fail, true)
@@ -45,11 +43,9 @@ define([
 		};
 
 		CanvasGuiImages.prototype.downloadBinaryImageRef = function(id, ref) {
-			console.log("Request Binary download: ", id, ref);
 
 			this.data[id].image = new Image();
 			var dataUpdated = function(url, arraybuffer) {
-				console.log("Bin download Ok: ", id, url, ref, arraybuffer);
 				this.data[id].bin = arraybuffer;
 
 
@@ -62,7 +58,7 @@ define([
 			}.bind(this);
 
 			var fail = function(err) {
-				console.log("Image download fail", err)
+				console.error("Image download error", err)
 			};
 
 			GameDataPipeline.loadImageFromUrl(ref, dataUpdated, fail, true)
@@ -72,7 +68,6 @@ define([
 
 
 		CanvasGuiImages.prototype.registerBinaryImageRefs = function(refs) {
-			console.log("Image bin refs: ", refs, this.bin);
 			for (var index in refs) {
 				if (!this.data[index]) {
 					ConfigCache.storeImageRef(index, {id:index, url:refs[index]});
@@ -84,7 +79,6 @@ define([
 		};
 
 		CanvasGuiImages.prototype.registerSvgImageRefs = function(refs) {
-			console.log("Image svg refs: ", refs, this.svg);
 			for (var index in refs) {
 				if (!this.data[index]) {
 					ConfigCache.storeImageRef(index, {id:index, url:refs[index]});

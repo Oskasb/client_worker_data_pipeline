@@ -29,7 +29,6 @@ define([
 			var handleTraversed = function(child) {
 
 				if (child.meshRendererComponent) {
-					console.log("preprocess child:", child);
 					processCount++;
 					var precompedShader = function() {
 						return renderer.preloadMaterials([child]).then(preloadedMats);
@@ -89,7 +88,6 @@ define([
 
 				loader.load(conf.id, null).then(function(res) {
 						cb(EntityUtils.clone(goo.world, res));
-					console.log("some stuff?:",stuff);
 				});
 
 
@@ -99,7 +97,6 @@ define([
 				cloneEntityName(this.cachedEntities[entityName], callback);
 			}.bind(this);
 
-			console.log("Wanted entity cached: ", entity);
 			this.preloadEntity(entity, this.cachedEntities[entity.name], sourceData, success, cloneIt)
 
 		};
@@ -107,11 +104,8 @@ define([
 		GooEntityCache.prototype.cacheLoadedEntities = function(gooRunner, bundleConf, loaderData, loader, success, fail, notifyLoaderProgress) {
 			goo = gooRunner;
 
-			console.log("Bundle down: ", bundleConf, loaderData, loader);
-
 			var progressUpdate = function(handled, refCount) {
 				notifyLoaderProgress(handled, refCount);
-				console.log("Progress: ", handled, refCount);
 			};
 
 			for (var index in loaderData) {
