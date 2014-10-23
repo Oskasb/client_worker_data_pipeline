@@ -42,6 +42,7 @@ define([
 		};
 
 		ConfigCache.storeImageRef = function(id, image) {
+			ConfigCache.notifyUrlReadRequest(image.url);
 			images[id] = image;
 		};
 
@@ -135,6 +136,7 @@ define([
 		};
 
 		ConfigCache.imageDataLoaded = function(id) {
+			ConfigCache.notifyUrlReceived(ConfigCache.getImageRef(id).url);
 			if (!imageSubs[id]) return;
 			for (var sub  in imageSubs[id]) {
 				imageSubs[id][sub](id, ConfigCache.getImageRef(id))
@@ -222,10 +224,6 @@ define([
 
 		ConfigCache.getCachedConfigs = function() {
 			return configs;
-		};
-
-		ConfigCache.tickDataPipeline = function(tpf) {
-			GameDataPipeline.tickDataLoader(tpf);
 		};
 
 

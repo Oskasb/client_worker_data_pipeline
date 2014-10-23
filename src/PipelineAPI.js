@@ -79,10 +79,5 @@ define(['data_pipeline/data/ConfigCache'],
 			return ConfigCache.getCachedConfigs();
 		};
 
-		PipelineAPI.updateDataPipeline = function(tpf) {
-			ConfigCache.tickDataPipeline(tpf);
-		};
-
-
 		return PipelineAPI;
 	});
