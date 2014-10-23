@@ -43,9 +43,7 @@ define([
 			};
 
 			var onWorkerOk = function(resUrl, res) {
-				console.log("Binary Data Loaded OK", resUrl, res);
 				onLoaded(res, resUrl);
-				//	console.log("Worker success: ", res, activatePolling)
 			};
 			var onWorkerFail = function(res) {
 				console.log("Worker fail: ", res)

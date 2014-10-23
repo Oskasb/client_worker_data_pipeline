@@ -66,8 +66,9 @@ define([
 				url:baseUrl+url
 			};
 
-			var checkBinary = function(str) {
-				dc.compareAndCacheBinary(url, str);
+			var checkBinary = function(res) {
+				var byteArray = new Uint8Array(res)
+				dc.compareAndCacheBinary(url, byteArray);
 			};
 
 			this.xhrThing.sendXHR(packet, checkBinary);

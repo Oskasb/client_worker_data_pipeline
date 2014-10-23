@@ -98,18 +98,28 @@ define([
 
 		DataComparator.prototype.compareAndCacheBinary = function(url, binData) {
 
-			var success = function(data) {
-				responseOk(url, data)
+			var success = function(srcUrl, data) {
+				responseOk(srcUrl, data)
 			};
 
 
-			if (cachedBinary[binData] != binData) {
-				cachedBinary[url] = binData;
-				success(binData);
-			} else {
+			var checkArraySame = function(a1, a2) {
+				if (!a1) return false;
+				if (a1.length != a2.length) return false;
+
+				for (var i = 0; i < a1.length; i++) {
+					if (a1[i] != a2[i]) return false
+				}
+				return true;
+			};
+
+			if (checkArraySame(cachedBinary[url], binData)) {
 				if (errorUrls[url]) {
 					errorResolved(url, errorUrls[url])
 				}
+			} else {
+				cachedBinary[url] = binData;
+				success(url, binData);
 			}
 		};
 

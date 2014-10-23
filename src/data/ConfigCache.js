@@ -118,23 +118,23 @@ define([
 		};
 
 
-		ConfigCache.registerImageSub = function(id, callback) {
-			if (!imageSubs[id]) imageSubs[id] = [];
-			imageSubs[id].push(callback)
+		ConfigCache.registerImageSub = function(subscriberId, imageId, callback) {
+			if (!imageSubs[imageId]) imageSubs[imageId] = {};
+			imageSubs[imageId][subscriberId] = callback
 		};
 
-		ConfigCache.subscribeToImageId = function(imageId, callback) {
+		ConfigCache.subscribeToImageId = function(subscriberId, imageId, callback) {
 			var data = ConfigCache.getImageRef(imageId);
 			if (data.loaded) {
 				callback(imageId, data);
 			}
-			ConfigCache.registerImageSub(imageId, callback);
+			ConfigCache.registerImageSub(subscriberId, imageId, callback);
 		};
 
 		ConfigCache.imageDataLoaded = function(id) {
 			if (!imageSubs[id]) return;
-			for (var i = 0; i < imageSubs[id].length; i++) {
-				imageSubs[id][i].callback(id, ConfigCache.getImageRef(id))
+			for (var sub  in imageSubs[id]) {
+				imageSubs[id][sub](id, ConfigCache.getImageRef(id))
 			}
 		};
 
