@@ -42,7 +42,7 @@ define([
 			loadedData[url] = config;
 
 			var fromLoader = function(srcUrl, loaderData, loader) {
-				success(srcUrl, loaderData, loader);
+				success(url, loaderData, loader);
 			};
 
 

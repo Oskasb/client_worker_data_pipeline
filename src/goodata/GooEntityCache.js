@@ -11,6 +11,7 @@ define([
 
 		var GooEntityCache = function() {
 		    this.cachedEntities = {};
+			this.cachedEnvironments = {};
 		};
 
 		GooEntityCache.prototype.preloadEntityData = function(entity, callback) {
@@ -27,7 +28,9 @@ define([
 			var doneCount = 0;
 
 			var handleTraversed = function(child) {
-
+				  if (!child.id) {
+					  console.error("No id on Child: ", child)
+				  }
 				if (child.meshRendererComponent) {
 					processCount++;
 					var precompedShader = function() {
@@ -83,14 +86,9 @@ define([
 		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, sourceData, success, fail) {
 
 			var cloneEntityName = function(conf, cb) {
-
-
-
 				loader.load(conf.id, null).then(function(res) {
 						cb(EntityUtils.clone(goo.world, res));
 				});
-
-
 			};
 
 			var cloneIt = function(entityName, callback) {
@@ -111,23 +109,49 @@ define([
 			for (var index in loaderData) {
 
 				var entry = loaderData[index];
-				if (bundleConf.entities.indexOf(entry.name) != -1) {
 
-					var entityBuilt = function(id, res, dynamicLoader) {
-						this.returnBuiltEntity(id, res, dynamicLoader, bundleConf, success, fail);
-					}.bind(this);
+				if (bundleConf.environment) {
+					if (bundleConf.environment.indexOf(entry.name) != -1) {
 
-					this.cachedEntities[entry.name] = entry;
-					loader.load(entry.id, {preloadBinaries:true, progressCallback:progressUpdate})
-						.then(function(res) {
+						this.cachedEnvironments[entry.name] = entry;
 
-						entityBuilt(entry.id, res, loader);
+						console.log("Added env: ", entry.name, this.cachedEnvironments);
+						var applyIt = function(name, cb) {
+							console.log("Apply: ", this.cachedEnvironments[name]);
+							cb(this.cachedEnvironments[name])
+						}.bind(this);
 
-					}).then(null, function (e) {
-							// If something goes wrong, 'e' is the error message from the engine.
-							fail('Failed to load bundle: ' + e);
-						})
-									}
+						success(entry.name, {conf:entry, sourceData:bundleConf, build:applyIt})
+
+
+
+					}
+				}
+
+				if (bundleConf.entities) {
+
+					if (bundleConf.entities.indexOf(entry.name) != -1) {
+
+						var entityBuilt = function(id, res, dynamicLoader) {
+							this.returnBuiltEntity(id, res, dynamicLoader, bundleConf, success, fail);
+						}.bind(this);
+
+						this.cachedEntities[entry.name] = entry;
+						loader.load(entry.id, {preloadBinaries:true, progressCallback:progressUpdate})
+							.then(function(res) {
+
+								if (!entry.id) {
+									console.error("No ID on entry: ", entry)
+									return;
+								}
+								entityBuilt(entry.id, res, loader);
+
+							}).then(null, function (e) {
+								// If something goes wrong, 'e' is the error message from the engine.
+								fail('Failed to load bundle: ', e);
+							})
+					}
+				}
 			}
 		};
 

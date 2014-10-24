@@ -196,6 +196,7 @@ define([
 			};
 
 			var onLoaded = function(remoteUrl, data, loader) {
+				console.log("Bundle Url: ", remoteUrl)
 				ConfigCache.notifyUrlReceived(remoteUrl);
 				ConfigCache.dataCombineToKey('bundles', bundleConf.id, data, loader);
 				gooEntityCache.cacheLoadedEntities(goo, bundleConf, data, loader, entitiesCached, fail, notifyLoaderProgress)
