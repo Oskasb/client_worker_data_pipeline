@@ -45,7 +45,7 @@ var handleMessage = function(oEvent) {
 		console.log("MainWorker not yet ready: ", oEvent);
 		setTimeout(function() {
 			handleMessage(oEvent);
-		}, 50);
+		}, 250);
 		return;
 	}
 
