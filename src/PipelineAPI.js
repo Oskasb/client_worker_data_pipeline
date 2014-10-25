@@ -18,7 +18,7 @@ define(['data_pipeline/data/ConfigCache'],
 		};
 
 		PipelineAPI.subscribeToCategoryUpdate = function(category, onDataCallback) {
-			ConfigCache.registerCategoryUpdatedCallback(category, onDataCallback)
+			return ConfigCache.registerCategoryUpdatedCallback(category, onDataCallback)
 		};
 
 		PipelineAPI.subscribeToCategoryKey = function(category, key, onDataCallback) {
@@ -73,6 +73,10 @@ define(['data_pipeline/data/ConfigCache'],
 		PipelineAPI.cacheImageFromUrl = function(url, success, fail) {
 			ConfigCache.cacheImageFromUrl(url, success, fail)
 
+		};
+
+		PipelineAPI.subscribeToImage = function(subscriberId, imageId, success) {
+			ConfigCache.subscribeToImageId(subscriberId, imageId, success)
 		};
 
 		PipelineAPI.getCachedConfigs = function() {

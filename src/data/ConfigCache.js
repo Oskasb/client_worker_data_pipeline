@@ -110,7 +110,7 @@ define([
 				ConfigCache.addCategory(category);
 			}
 			categories[category].callbacks.push(callback);
-
+		    return configs[category];
 		};
 
 		ConfigCache.subscribeToCategoryKey = function(category, key, callback) {
@@ -129,9 +129,13 @@ define([
 
 		ConfigCache.subscribeToImageId = function(subscriberId, imageId, callback) {
 			var data = ConfigCache.getImageRef(imageId);
-			if (data.loaded) {
-				callback(imageId, data);
+
+			if (data) {
+				if (data.loaded) {
+					callback(imageId, data);
+				}
 			}
+
 			ConfigCache.registerImageSub(subscriberId, imageId, callback);
 		};
 
