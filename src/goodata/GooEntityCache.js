@@ -114,6 +114,7 @@ define([
 					if (bundleConf.environment.indexOf(entry.name) != -1) {
 
 						this.cachedEnvironments[entry.name] = entry;
+						loader.load(entry.id)
 
 						console.log("Added env: ", entry.name, this.cachedEnvironments);
 						var applyIt = function(name, cb) {
