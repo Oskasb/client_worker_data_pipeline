@@ -138,12 +138,11 @@ define([
 						this.cachedEnvironments[entry.name] = {conf:entry, loader:loader};
 						loader.load(entry.id)
 
-						console.log("Added env: ", entry.name, this.cachedEnvironments, success);
+						console.log("Added env: ", entry.name, this.cachedEnvironments);
 						var applyIt = function(name, cb) {
 							console.log("Apply: ", this.cachedEnvironments[name]);
 							cb(this.cachedEnvironments[name])
 						}.bind(this);
-					//	success("ok")
 					//	success(entry.name, {conf:entry, sourceData:bundleConf, build:applyIt})
 					}
 				}
