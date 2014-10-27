@@ -10,6 +10,7 @@ define([
 		var goo;
 
 		var GooEntityCache = function() {
+			this.clonableEntities = {};
 		    this.cachedEntities = {};
 			this.cachedEnvironments = {};
 		};
@@ -76,19 +77,41 @@ define([
 			};
 
 			var preProcessingDone = function() {
+				this.clonableEntities[entity.name] = entity;
 				preloadDoneCallback(entity, bundleConf, sourceData);
-			};
+			}.bind(this);
 
-			this.preloadEntityData(entity, preProcessingDone)
+			this.preloadEntityData(entity, preProcessingDone);
+		};
+
+		GooEntityCache.prototype.cloneEntity = function(entityName, callback) {
+			if (!this.clonableEntities[entityName]) {
+				console.error("No entity available with name: ", entityName, this.clonableEntities);
+			}
+			callback(EntityUtils.clone(goo.world, this.clonableEntities[entityName]));
+		};
+
+
+
+
+		GooEntityCache.prototype.reloadEnvironment = function(entityName, callback) {
+			if (!this.cachedEnvironments[entityName]) {
+				console.error("No environment available with name: ", entityName, this.cachedEnvironments);
+			}
+
+			this.cachedEnvironments[entityName].loader.load(this.cachedEnvironments[entityName].conf.id).then(function(res) {
+				callback(res)
+			});
 		};
 
 
 		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, sourceData, success, fail) {
 
 			var cloneEntityName = function(conf, cb) {
-			//	loader.load(conf.id, null).then(function(res) {
-						cb(EntityUtils.clone(goo.world, entity));
-			//	});
+				// make it asynch response
+				setTimeout(function() {
+					cb(EntityUtils.clone(goo.world, entity));
+				}, 0);
 			};
 
 			var cloneIt = function(entityName, callback) {
@@ -107,25 +130,21 @@ define([
 			};
 
 			for (var index in loaderData) {
-
 				var entry = loaderData[index];
 
 				if (bundleConf.environment) {
 					if (bundleConf.environment.indexOf(entry.name) != -1) {
 
-						this.cachedEnvironments[entry.name] = entry;
+						this.cachedEnvironments[entry.name] = {conf:entry, loader:loader};
 						loader.load(entry.id)
 
-						console.log("Added env: ", entry.name, this.cachedEnvironments);
+						console.log("Added env: ", entry.name, this.cachedEnvironments, success);
 						var applyIt = function(name, cb) {
 							console.log("Apply: ", this.cachedEnvironments[name]);
 							cb(this.cachedEnvironments[name])
 						}.bind(this);
-
-						success(entry.name, {conf:entry, sourceData:bundleConf, build:applyIt})
-
-
-
+					//	success("ok")
+					//	success(entry.name, {conf:entry, sourceData:bundleConf, build:applyIt})
 					}
 				}
 

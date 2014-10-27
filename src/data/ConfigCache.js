@@ -191,7 +191,13 @@ define([
 			GameDataPipeline.loadConfigFromUrl(url, onLoaded, fail);
 		};
 
+		ConfigCache.cloneCachedEntity = function(entityName, callback) {
+			gooEntityCache.cloneEntity(entityName, callback);
+		};
 
+		ConfigCache.reloadEnvironmentEntity = function(entityName, callback) {
+			gooEntityCache.reloadEnvironment(entityName, callback);
+		};
 
 		ConfigCache.cacheGooBundleFromUrl = function(path, goo, bundleConf, success, fail, notifyLoaderProgress) {
 			ConfigCache.notifyUrlReadRequest(path+bundleConf.folder);

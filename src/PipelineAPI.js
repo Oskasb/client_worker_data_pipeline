@@ -25,31 +25,38 @@ define(['data_pipeline/data/ConfigCache'],
 			ConfigCache.subscribeToCategoryKey(category, key, onDataCallback)
 		};
 
+		PipelineAPI.cloneLoadedGooEntity = function(entityName, callback) {
+			 ConfigCache.cloneCachedEntity(entityName, callback);
+		};
+
+		PipelineAPI.applyEnvironmentGooEntity = function(entityName, callback) {
+			ConfigCache.reloadEnvironmentEntity(entityName, callback);
+		};
 
 
 		PipelineAPI.initBundleDownload = function(path, goo, masterUrl, assetUpdated, fail, notifyLoaderProgress) {
 
-
 			var bundleArray;
 
 			var success = function(srcKey, loaderData) {
-				assetUpdated(srcKey, loaderData);
 				if (bundleArray.length) {
-					processNext();
+					var next =  bundleArray.shift();
+					console.log("next bundle:", next);
+					processNext(next);
 				}
+				assetUpdated(srcKey, loaderData);
 			}.bind(this);
 
-			var processNext = function() {
+			var processNext = function(next) {
 				var cacheFail = function(err) {
 					console.error("Failed to cache bundle: ", err);
 				};
-				ConfigCache.cacheGooBundleFromUrl(path, goo, bundleArray.shift(), success, cacheFail, notifyLoaderProgress)
+				ConfigCache.cacheGooBundleFromUrl(path, goo,next, success, cacheFail, notifyLoaderProgress)
 			};
-
 
 			var registerBundleList = function(bundles) {
 				bundleArray = bundles;
-				processNext();
+				processNext(bundleArray.shift());
 			};
 
 			var bundleMasterUpdated = function(srcKey, data) {
