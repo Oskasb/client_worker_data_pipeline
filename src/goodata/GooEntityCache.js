@@ -86,9 +86,9 @@ define([
 		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, sourceData, success, fail) {
 
 			var cloneEntityName = function(conf, cb) {
-				loader.load(conf.id, null).then(function(res) {
-						cb(EntityUtils.clone(goo.world, res));
-				});
+			//	loader.load(conf.id, null).then(function(res) {
+						cb(EntityUtils.clone(goo.world, entity));
+			//	});
 			};
 
 			var cloneIt = function(entityName, callback) {
