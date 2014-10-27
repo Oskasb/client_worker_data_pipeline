@@ -1,9 +1,10 @@
 define([
-	'goo/entities/EntityUtils'
-
+	'goo/entities/EntityUtils',
+	'goo/animationpack/components/AnimationComponent'
 ],
 	function(
-		EntityUtils
+		EntityUtils,
+		AnimationComponent
 		) {
 		"use strict";
 
@@ -33,6 +34,9 @@ define([
 					  console.error("No id on Child: ", child)
 				  }
 				if (child.meshRendererComponent) {
+
+
+
 					processCount++;
 					var precompedShader = function() {
 						return renderer.preloadMaterials([child]).then(preloadedMats);
@@ -70,6 +74,99 @@ define([
 			}
 		};
 
+
+		GooEntityCache.prototype.clone = function(obj) {
+			var copy;
+
+			// Handle the 3 simple types, and null or undefined
+			if (null == obj || "object" != typeof obj) return obj;
+
+			// Handle Date
+			if (obj instanceof Date) {
+				copy = new Date();
+				copy.setTime(obj.getTime());
+				return copy;
+			}
+
+			// Handle Array
+			if (obj instanceof Array) {
+				copy = [];
+				for (var i = 0, len = obj.length; i < len; i++) {
+					copy[i] = this.clone(obj[i]);
+				}
+				return copy;
+			}
+
+			// Handle Object
+			if (obj instanceof Object) {
+				copy = {};
+				for (var attr in obj) {
+					if (obj.hasOwnProperty(attr)) copy[attr] = this.clone(obj[attr]);
+				}
+				return copy;
+			}
+
+			throw new Error("Unable to copy obj! Its type isn't supported.");
+		};
+
+		GooEntityCache.prototype.processForClone = function(entity) {
+			var settings = {
+				skeletonMap:{
+					originals: [],
+					clones: []
+				}
+			};
+			var addToSettings = function(pose) {
+				console.log("Skel Pose: ", pose);
+				settings.skeletonMap.originals.push(pose);
+				settings.skeletonMap.clones.push(pose.clone())
+			};
+
+			var cloneAnimations = function(ent) {
+				console.log("Clone ent anims: ", ent);
+
+			//	ent.animationComponent._skeletonPose = cloneSkelPose(ent.animationComponent._skeletonPose)
+				addToSettings(ent.animationComponent._skeletonPose);
+			//	ent.setComponent(new AnimationComponent(cloneSkelPose(ent.animationComponent._skeletonPose)));
+			};
+
+			if (entity.animationComponent) {
+				cloneAnimations(entity)
+			}
+
+			var clone = function(obj) {
+				return this.clone(obj);
+			}.bind(this);
+
+			var handleTraversed = function(child) {
+				if (!child.id) {
+					console.error("No id on Child: ", child)
+				}
+
+				if (child.animationComponent) {
+					addToSettings(child.animationComponent._skeletonPose);
+				}
+
+				if (child.meshRendererComponent) {
+					console.log("mesh child: ", child);
+					if (child.hasTag('reflectable')) {
+						console.log("has the reflectable tag: ", child);
+						child.meshRendererComponent.isReflectable = true;
+					} else {
+						child.meshRendererComponent.isReflectable = false;
+					}
+
+
+				}
+
+			}.bind(this);
+
+			if (typeof(entity.traverse) == 'function') {
+				entity.traverse(handleTraversed);
+			}
+			return entity;
+		};
+
 		GooEntityCache.prototype.preloadEntity = function(entity, bundleConf, sourceData, success, cloneIt) {
 
 			var preloadDoneCallback = function(ent, gooConf, sourceConf) {
@@ -88,7 +185,8 @@ define([
 			if (!this.clonableEntities[entityName]) {
 				console.error("No entity available with name: ", entityName, this.clonableEntities);
 			}
-			callback(EntityUtils.clone(goo.world, this.clonableEntities[entityName]));
+			var processedClone = this.processForClone(EntityUtils.clone(goo.world, this.clonableEntities[entityName]))
+			callback(processedClone);
 		};
 
 
@@ -107,11 +205,16 @@ define([
 
 		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, sourceData, success, fail) {
 
+			var processForClone = function(e) {
+				return this.processForClone(e)
+			}.bind(this);
+
 			var cloneEntityName = function(conf, cb) {
-				// make it asynch response
 				setTimeout(function() {
-					cb(EntityUtils.clone(goo.world, entity));
-				}, 0);
+					var eClone = EntityUtils.clone(goo.world, entity);
+					processForClone(eClone);
+					cb(eClone);
+				}, 0)
 			};
 
 			var cloneIt = function(entityName, callback) {
@@ -156,7 +259,7 @@ define([
 						}.bind(this);
 
 						this.cachedEntities[entry.name] = entry;
-						loader.load(entry.id, {preloadBinaries:true, progressCallback:progressUpdate})
+						loader.load(entry.id, {preloadBinaries:false, progressCallback:progressUpdate})
 							.then(function(res) {
 
 								if (!entry.id) {
