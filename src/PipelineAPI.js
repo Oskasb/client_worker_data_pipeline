@@ -26,47 +26,19 @@ define(['data_pipeline/data/ConfigCache'],
 		};
 
 		PipelineAPI.cloneLoadedGooEntity = function(entityName, callback) {
-			 ConfigCache.cloneCachedEntity(entityName, callback);
+			ConfigCache.cloneCachedEntity(entityName, callback);
 		};
 
 		PipelineAPI.applyEnvironmentGooEntity = function(entityName, callback) {
 			ConfigCache.reloadEnvironmentEntity(entityName, callback);
 		};
 
-
 		PipelineAPI.initBundleDownload = function(path, goo, masterUrl, assetUpdated, fail, notifyLoaderProgress) {
+			ConfigCache.loadBundleMaster(path, goo, masterUrl, assetUpdated, fail, notifyLoaderProgress)
+		};
 
-			var bundleArray;
-
-			var success = function(srcKey, loaderData) {
-				if (bundleArray.length) {
-					var next =  bundleArray.shift();
-					console.log("next bundle:", next);
-					processNext(next);
-				}
-				assetUpdated(srcKey, loaderData);
-			}.bind(this);
-
-			var processNext = function(next) {
-				var cacheFail = function(err) {
-					console.error("Failed to cache bundle: ", err);
-				};
-				ConfigCache.cacheGooBundleFromUrl(path, goo,next, success, cacheFail, notifyLoaderProgress)
-			};
-
-			var registerBundleList = function(bundles) {
-				bundleArray = bundles;
-				processNext(bundleArray.shift());
-			};
-
-			var bundleMasterUpdated = function(srcKey, data) {
-				for (var i = 0; i < data.length; i++) {
-					registerBundleList(data[i].bundle_index.bundles);
-				}
-			};
-
-			ConfigCache.cacheFromUrl(masterUrl, bundleMasterUpdated, fail);
-
+		PipelineAPI.meshCombineEntityList = function(entityList, combineDone) {
+			ConfigCache.combineEntities(entityList, combineDone);
 		};
 
 		PipelineAPI.subscribeToConfigUrl = function(url, success, fail) {

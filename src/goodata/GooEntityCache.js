@@ -1,10 +1,10 @@
 define([
 	'goo/entities/EntityUtils',
-	'goo/animationpack/components/AnimationComponent'
+	'data_pipeline/goodata/GooEntityListCombiner'
 ],
 	function(
 		EntityUtils,
-		AnimationComponent
+		GooEntityListCombiner
 		) {
 		"use strict";
 
@@ -14,6 +14,7 @@ define([
 			this.clonableEntities = {};
 		    this.cachedEntities = {};
 			this.cachedEnvironments = {};
+			this.gooEntityListCombiner = new GooEntityListCombiner();
 		};
 
 		GooEntityCache.prototype.preloadEntityData = function(entity, callback) {
@@ -239,7 +240,7 @@ define([
 					if (bundleConf.environment.indexOf(entry.name) != -1) {
 
 						this.cachedEnvironments[entry.name] = {conf:entry, loader:loader};
-						loader.load(entry.id)
+					//	loader.load(entry.id)
 
 						console.log("Added env: ", entry.name, this.cachedEnvironments);
 						var applyIt = function(name, cb) {
@@ -277,8 +278,8 @@ define([
 			}
 		};
 
-		GooEntityCache.prototype.getCachedObjectByName = function(name) {
-
+		GooEntityCache.prototype.runCombinerOnList = function(entityList, combineDone) {
+			this.gooEntityListCombiner.combineList(goo, entityList, combineDone);
 		};
 
 
