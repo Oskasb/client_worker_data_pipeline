@@ -149,7 +149,7 @@ define([
 				}
 
 				if (child.meshRendererComponent) {
-					console.log("mesh child: ", child);
+				//	console.log("mesh child: ", child);
 					if (child.hasTag('reflectable')) {
 						console.log("has the reflectable tag: ", child);
 						child.meshRendererComponent.isReflectable = true;

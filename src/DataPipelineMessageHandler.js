@@ -1,11 +1,18 @@
 "use strict";
 
 define([
-	'goo/entities/SystemBus'
+	'goo/entities/SystemBus',
+
 ],
 	function(
 		SystemBus
 		) {
+
+		var ConfigCache;
+
+		require(['data_pipeline/data/ConfigCache'], function(CC) {
+			ConfigCache = CC;
+		});
 
 		var okCount = 0;
 		var failCount = 0;
@@ -67,7 +74,13 @@ define([
 		//	delayedSend('data_validation_error_channel', msg, 3500);
 		};
 
+
+		var notifyWorkerReady = function() {
+			ConfigCache.pipelineReady(true)
+		};
+
 		return {
+			notifyWorkerReady:notifyWorkerReady,
 			handleWorkerError:handleWorkerError,
 			handleErrorUpdate:handleErrorUpdate,
 			handleDataUpdated:handleDataUpdated,

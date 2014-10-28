@@ -5,8 +5,17 @@ define(['data_pipeline/data/ConfigCache'],
 		ConfigCache
 		) {
 
+
 		var PipelineAPI = function() {
 
+		};
+
+		PipelineAPI.addReadyCallback = function(cb) {
+			ConfigCache.addReadyCallback(cb);
+		};
+
+		PipelineAPI.checkReadyState = function() {
+			return ConfigCache.getReady();
 		};
 
 		PipelineAPI.addProgressCallback = function(callback) {

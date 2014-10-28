@@ -11,6 +11,10 @@ define([
 		var configs = {
 			urls:{}
 		};
+
+		var pipelineReady = false;
+		var readyCallbacks = [];
+
 		var categories = {};
 		var images = {};
 		var imageSubs = {};
@@ -22,11 +26,27 @@ define([
 
 		var gooEntityCache = new GooEntityCache();
 
-
 		var ConfigCache = function() {
 
 		};
 
+		ConfigCache.pipelineReady = function(bool) {
+			pipelineReady = bool;
+			if (pipelineReady) {
+				for (var i = 0; i < readyCallbacks.length; i++) {
+					readyCallbacks[i]();
+				}
+				readyCallbacks.length = 0;
+			}
+		};
+
+		ConfigCache.getReady = function() {
+			return pipelineReady;
+		};
+
+		ConfigCache.addReadyCallback = function(cb) {
+			readyCallbacks.push(cb);
+		};
 
 		ConfigCache.applyDataPipelineOptions = function(opts) {
 			GameDataPipeline.applyPipelineOptions(opts)
