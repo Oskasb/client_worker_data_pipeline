@@ -270,7 +270,7 @@ define([
 				var cacheFail = function(err) {
 					console.error("Failed to cache bundle: ", err);
 				};
-				ConfigCache.cacheGooBundleFromUrl(path, goo,next, success, cacheFail, notifyLoaderProgress)
+				ConfigCache.cacheGooBundleFromUrl(window.resourcePath, goo,next, success, cacheFail, notifyLoaderProgress)
 			};
 
 			var registerBundleList = function(bundles) {

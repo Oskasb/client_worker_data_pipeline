@@ -72,7 +72,7 @@ define([
 				if (!this.data[index]) {
 					ConfigCache.storeImageRef(index, {id:index, url:refs[index]});
 					this.data[index] = ConfigCache.getImageRef(index);
-					this.downloadBinaryImageRef(index, refs[index]);
+					this.downloadBinaryImageRef(index, window.resourcePath + refs[index]);
 
 				}
 			}

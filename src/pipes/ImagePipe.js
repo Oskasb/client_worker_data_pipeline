@@ -37,8 +37,8 @@ define([
 		};
 
 		ImagePipe.loadImage = function(url, dataUpdated, fail) {
-			var onLoaded = function(svg, fileUrl) {
-				ImagePipe.storeData(fileUrl, svg, dataUpdated);
+			var onLoaded = function(img, fileUrl) {
+				ImagePipe.storeData(fileUrl, img, dataUpdated);
 				ImagePipe.registerPollCallback(fileUrl, dataUpdated);
 			};
 

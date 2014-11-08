@@ -6,6 +6,9 @@ define(['data_pipeline/data/ConfigCache'],
 		) {
 
 
+        var path = window.resourcePath;
+
+
 		var PipelineAPI = function() {
 
 		};
