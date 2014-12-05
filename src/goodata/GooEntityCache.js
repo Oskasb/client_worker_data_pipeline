@@ -154,7 +154,7 @@ define([
 						console.log("has the reflectable tag: ", child);
 						child.meshRendererComponent.isReflectable = true;
 					} else {
-						child.meshRendererComponent.isReflectable = false;
+				//		child.meshRendererComponent.isReflectable = false;
 					}
 
 
