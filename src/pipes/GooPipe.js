@@ -46,11 +46,11 @@ define([
 			};
 
 
-			GooPipe.passToDynamicLoader(goo, path+url, fileName, fromLoader, fail);
+			GooPipe.passToDynamicLoader(goo, window.gooBundlesPath+url, fileName, fromLoader, fail);
 
 
 			var dataUpdated = function() {
-				GooPipe.passToDynamicLoader(goo, path+url, fileName, fromLoader, fail)
+				GooPipe.passToDynamicLoader(goo, window.gooBundlesPath+url, fileName, fromLoader, fail)
 			};
 
 			GooPipe.registerPollCallback(url+fileName, dataUpdated);
