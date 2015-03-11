@@ -75,7 +75,7 @@ function(
 			var config = entity.components.transform;
 
 			// Translation
-			localTrans.translation.seta(config.translation);
+			localTrans.translation.setArray(config.translation);
 
 			// Rotation
 			localTrans.setRotationXYZ(
@@ -85,7 +85,7 @@ function(
 			);
 
 			// Scale
-			localTrans.scale.seta(config.scale);
+			localTrans.scale.setArray(config.scale);
 		}
 
 		// Compute world transforms
