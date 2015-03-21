@@ -123,18 +123,19 @@ define([
 				settings.skeletonMap.clones.push(pose.clone())
 			};
 
+		/*
 			var cloneAnimations = function(ent) {
 				console.log("Clone ent anims: ", ent);
 
 			//	ent.animationComponent._skeletonPose = cloneSkelPose(ent.animationComponent._skeletonPose)
-				addToSettings(ent.animationComponent._skeletonPose);
+			//	addToSettings(ent.animationComponent._skeletonPose);
 			//	ent.setComponent(new AnimationComponent(cloneSkelPose(ent.animationComponent._skeletonPose)));
 			};
 
 			if (entity.animationComponent) {
 				cloneAnimations(entity)
 			}
-
+        */
 			var clone = function(obj) {
 				return this.clone(obj);
 			}.bind(this);
@@ -154,7 +155,7 @@ define([
 						console.log("has the reflectable tag: ", child);
 						child.meshRendererComponent.isReflectable = true;
 					} else {
-				//		child.meshRendererComponent.isReflectable = false;
+						child.meshRendererComponent.isReflectable = false;
 					}
 
 
@@ -206,14 +207,19 @@ define([
 
 		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, sourceData, success, fail) {
 
+			console.log("Fetch Built Entity: ", id)
+
 			var processForClone = function(e) {
 				return this.processForClone(e)
 			}.bind(this);
 
 			var cloneEntityName = function(conf, cb) {
 				setTimeout(function() {
+
 					var eClone = EntityUtils.clone(goo.world, entity);
+
 					processForClone(eClone);
+					console.log("Built Clone: ",eClone )
 					cb(eClone);
 				}, 0)
 			};

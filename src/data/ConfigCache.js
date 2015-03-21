@@ -212,6 +212,7 @@ define([
 		};
 
 		ConfigCache.cloneCachedEntity = function(entityName, callback) {
+			console.log("Config Cache Clone: ", entityName)
 			gooEntityCache.cloneEntity(entityName, callback);
 		};
 

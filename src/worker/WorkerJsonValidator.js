@@ -103,7 +103,7 @@ define([
 		WorkerJsonValidator.prototype.validateDataAsJson = function(dataLoader, url, json, ok, fail) {
 			if (!this.workerDataLoader) {
 				this.workerDataLoader = dataLoader;
-				this.setupSchemaPoll();
+			//	this.setupSchemaPoll();
 			}
 
 			try {
