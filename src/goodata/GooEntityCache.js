@@ -205,6 +205,13 @@ define([
 		};
 
 
+		var cloneSettings = {
+			shareTextures:true,
+			shareUniforms:true,
+			shareMeshData:true,
+			shareMaterials:true
+		};
+
 		GooEntityCache.prototype.returnBuiltEntity = function(id, entity, loader, sourceData, success, fail) {
 
 			console.log("Fetch Built Entity: ", id)
@@ -216,7 +223,7 @@ define([
 			var cloneEntityName = function(conf, cb) {
 				setTimeout(function() {
 
-					var eClone = EntityUtils.clone(goo.world, entity);
+					var eClone = EntityUtils.clone(goo.world, entity, cloneSettings);
 
 					processForClone(eClone);
 					console.log("Built Clone: ",eClone )
